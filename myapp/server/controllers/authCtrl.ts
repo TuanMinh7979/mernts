@@ -3,7 +3,7 @@ import Users from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Error } from "mongoose";
-import { generateActiveToken } from "../config/generatetoken";
+import { generateActiveToken } from "../config/generateToken";
 
 const authCtrl = {
   register: async (req: Request, res: Response) => {
