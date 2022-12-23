@@ -6,31 +6,37 @@ export const validRegister = async (
 ) => {
   const { name, account, password } = req.body;
 
+  const errs = [];
   if (!name) {
-    return res.status(400).json({ msg: "please add your name" });
+    errs.push("please add your name");
   } else if (name.length > 20) {
-    return res.status(400).json({ msg: "please check your name length" });
+    errs.push("please check your name length");
   }
   if (!account) {
     return res
       .status(400)
       .json({ msg: "please add your email or phone number" });
   } else if (!validatePhone(account) && !validateEmail(account)) {
-    return res.status(400).json({ msg: "please check your account format" });
+    errs.push("please check your account format");
   }
 
   if (password.length < 6) {
-    return res.status(400).json({ msg: "password must be at least 6 chars" });
+    errs.push("password must be at least 6 chars");
   }
 
-  return next();
+  if (errs.length > 0) {
+    return res.status(400).json({ msg: errs });
+  
+  } else {
+    return next();
+  }
 };
 
-const validatePhone = (phone: string) => {
+export const validatePhone = (phone: string) => {
   const re = /^[+]/g;
   return re.test(phone);
 };
-const validateEmail = (email: string) => {
+export const validateEmail = (email: string) => {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());

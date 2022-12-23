@@ -4,11 +4,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Error } from "mongoose";
 import { generateActiveToken } from "../config/generateToken";
+import { validateEmail } from "../middleware/valid";
+import sendEmail from "../config/sendMail";
 
 const authCtrl = {
   register: async (req: Request, res: Response) => {
     try {
       const { name, account, password } = req.body;
+      
+   
       const user = await Users.findOne({ account });
       if (user) {
         return res
@@ -29,6 +33,13 @@ const authCtrl = {
         account,
         password: passwordHash,
       });
+
+      if (validateEmail(account)) {
+        const url = `${process.env.BASE_URL}/active/${active_token}`;
+        console.log("send mail ...");
+        sendEmail(account, url, "Xac nhan dia chi email");
+        return res.json({ msg: "success! Please check your email" });
+      }
 
       return res.json({
         status: "OK",
