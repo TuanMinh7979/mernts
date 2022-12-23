@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const generateActiveToken = (payload: object) => {
   return jwt.sign(payload, `${process.env.ACTIVE_SECRET}`, {
-    expiresIn: "10m",
+    expiresIn: "100m",
   });
 };
 

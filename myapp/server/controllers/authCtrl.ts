@@ -21,18 +21,16 @@ const authCtrl = {
       }
 
       const passwordHash = await bcrypt.hash(password, 12);
-      const newUser = new User({
+
+      const newUser = {
         name,
         account,
         password: passwordHash,
-      });
+      };
       //active to save
-      // await newUser.save();
 
       const active_token = generateActiveToken({
-        name,
-        account,
-        password: passwordHash,
+        newUser,
       });
 
       if (validateEmail(account)) {
@@ -56,18 +54,13 @@ const authCtrl = {
 
   activeAccount: async (req: Request, res: Response) => {
     try {
-      console.log("----------------------");
       const { active_token } = req.body;
       const decode = <IDecodedToken>(
         jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
       );
-      console.log(decode);
-      console.log("---");
-      console.log("---", decode.newUser);
       const { newUser } = decode;
-      console.log(newUser);
-      const user = new User(decode);
-      await user.save()
+      const user = new User(newUser);
+      await user.save();
       return res.json("actived");
     } catch (err) {
       if (err instanceof Error)
