@@ -3,11 +3,15 @@ import User from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Error } from "mongoose";
-import { generateActiveToken } from "../config/generateToken";
+import {
+  generateActiveToken,
+  generateAccessToken,
+  generateRefreshToken,
+} from "../config/generateToken";
 import { validateEmail } from "../middleware/valid";
 import sendEmail from "../config/sendMail";
-import { INewUser, IDecodedToken } from "../config/interface";
-import userModel from "../models/userModel";
+import { INewUser, IDecodedToken, IUser } from "../config/interface";
+
 const authCtrl = {
   register: async (req: Request, res: Response) => {
     try {
@@ -59,6 +63,8 @@ const authCtrl = {
         jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
       );
       const { newUser } = decode;
+      if (!newUser) return res.status(500).json({ msg: "Authen failed" });
+
       const user = new User(newUser);
       await user.save();
       return res.json("actived");
@@ -67,6 +73,39 @@ const authCtrl = {
         return res.status(500).json({ msg: err.message });
     }
   },
+  login: async (req: Request, res: Response) => {
+    try {
+      const { account, password } = req.body;
+
+      const user = await User.findOne({ account });
+      if (!user) return res.status(400).json({ msg: "login failed" });
+
+      loginUser(user, password, res);
+     
+    } catch (err) {
+      console.log(err);
+      if (err instanceof Error)
+        return res.status(500).json({ msg: err.message });
+    }
+  },
+};
+
+const loginUser = async (user: IUser, password: string, res: Response) => {
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
+
+  const access_token = generateAccessToken({ id: user._id });
+  const refresh_token = generateRefreshToken({ id: user._id });
+  res.cookie("refreshtoken", refresh_token, {
+    httpOnly: true,
+    path: "/api/refresh_token",
+  });
+
+  res.json({
+    msg: "login sc",
+    access_token,
+    user: {...user._doc, password: "" },
+  });
 };
 
 export default authCtrl;
