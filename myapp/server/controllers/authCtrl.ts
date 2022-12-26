@@ -81,9 +81,27 @@ const authCtrl = {
       if (!user) return res.status(400).json({ msg: "login failed" });
 
       loginUser(user, password, res);
-     
     } catch (err) {
       console.log(err);
+      if (err instanceof Error)
+        return res.status(500).json({ msg: err.message });
+    }
+  },
+  refreshToken: async (req: Request, res: Response) => {
+    try {
+      const rf_token = req.cookies.refrestoken;
+      console.log(req.cookies);
+      res.json({ msg: "SC" });
+    } catch (err) {
+      if (err instanceof Error)
+        return res.status(500).json({ msg: err.message });
+    }
+  },
+  logout: async (req: Request, res: Response) => {
+    try {
+      res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
+      return res.json({ msg: " logged out" });
+    } catch (err) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
     }
@@ -104,8 +122,7 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
   res.json({
     msg: "login sc",
     access_token,
-    user: {...user._doc, password: "" },
+    user: { ...user._doc, password: "" },
   });
 };
-
 export default authCtrl;
