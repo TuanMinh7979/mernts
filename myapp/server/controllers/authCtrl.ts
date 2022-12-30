@@ -75,6 +75,7 @@ const authCtrl = {
   },
   login: async (req: Request, res: Response) => {
     try {
+   
       const { account, password } = req.body;
 
       const user = await User.findOne({ account });

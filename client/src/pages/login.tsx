@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginPass from "../components/auth/LoginPass";
+import LoginSMS from "../components/auth/LoginSMS";
 
 const Login = () => {
   const [sms, setSms] = useState(false);
@@ -8,7 +9,7 @@ const Login = () => {
     <div className="auth_page">
       <div className="auth_box">
         <h3 className="text-uppecase text-center mb-4"></h3>
-        <LoginPass />
+        {sms ? <LoginSMS /> : <LoginPass />}
 
         <small className="row my-2 text-primary" style={{ cursor: "pointer" }}>
           <Link to="/forot_password" className="col-6">
@@ -16,7 +17,7 @@ const Login = () => {
           </Link>
 
           <span className="col-6" onClick={() => setSms(!sms)}>
-            {sms ? "sign in with sms" : "sign in with password"}
+            {sms ? "sign in with password" : "sign in with sms"}
           </span>
         </small>
 
