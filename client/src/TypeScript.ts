@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent } from "react";
+import rootReducer from "./redux/reducers";
 export type InputChange = ChangeEvent<HTMLInputElement>;
 
 export type FormSubmit = FormEvent<HTMLFormElement>;
@@ -23,3 +24,9 @@ export interface IUser extends IUserLogin {
   _id: string;
 }
 
+export interface IAlert {
+  loading?: boolean;
+  success?: string | string[];
+  error?: string | string[];
+}
+export type RootStore = ReturnType<typeof rootReducer>;
