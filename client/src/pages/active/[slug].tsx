@@ -7,23 +7,26 @@ const Active = () => {
   const { slug } = useParams();
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+
   useEffect(() => {
-    console.log("post now---");
-    postAPI("active", { active_token: slug })
-      .then((res) => {
-        console.log("success now");
-        setSuccessMsg(res.data.msg);
-      })
-      .catch((err) => {
-        console.log("error now");
-        setErrMsg(err.response.data.msg);
-      });
-  }, []);
+    if (slug) {
+      postAPI("active", { active_token: slug })
+        .then((res) => {
+          console.log("thanhncong");
+          setSuccessMsg("thanh cong");
+        })
+        .catch((err) => {
+          console.log("failed", err);
+          setErrMsg(err.response.data.msg);
+        });
+    }
+  }, [slug]);
   console.log("RENDER now");
   return (
     <>
-      <div>{errMsg && showErrorMsg(errMsg)}</div>
-      <div>{successMsg && showSuccessMsg(successMsg)}</div>
+      <div>
+        {successMsg ? showSuccessMsg(successMsg) : showErrorMsg(errMsg)}
+      </div>
     </>
   );
 };
