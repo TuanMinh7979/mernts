@@ -10,6 +10,8 @@ const generatePage = (name: string) => {
     return <NotFound />;
   }
 };
+
+
 const PageRender = () => {
   const { page, slug } = useParams();
   let name = "";

@@ -29,4 +29,11 @@ export interface IAlert {
   success?: string | string[];
   error?: string | string[];
 }
+
+export interface IUserRegister extends IUserLogin {
+  name: string;
+  // account: string;
+  // password: string;
+  cf_password: string;
+}
 export type RootStore = ReturnType<typeof rootReducer>;

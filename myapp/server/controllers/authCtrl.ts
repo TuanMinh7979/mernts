@@ -55,6 +55,41 @@ const authCtrl = {
         return res.status(500).json({ msg: err.message });
     }
   },
+  registerPro: async (req: Request, res: Response) => {
+    try {
+      const { name, account, password } = req.body;
+
+      const user = await User.findOne({ account });
+      if (user) {
+        return res
+          .status(400)
+          .json({ msg: "Email or phone number already exist" });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const newUser = {
+        name,
+        account,
+        password: passwordHash,
+      };
+      //active to save
+
+      const userToSave = new User(newUser);
+      await userToSave.save();
+
+
+      return res.json({
+        status: "OK",
+        msg: "register production success",
+        data: newUser,
+        
+      });
+    } catch (err) {
+      if (err instanceof Error)
+        return res.status(500).json({ msg: err.message });
+    }
+  },
 
   activeAccount: async (req: Request, res: Response) => {
     try {
@@ -75,7 +110,6 @@ const authCtrl = {
   },
   login: async (req: Request, res: Response) => {
     try {
-   
       const { account, password } = req.body;
 
       const user = await User.findOne({ account });

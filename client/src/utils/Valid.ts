@@ -1,12 +1,9 @@
-import { Request, Response, NextFunction } from "express";
-export const validRegister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { name, account, password } = req.body;
-
-  const errs = [];
+import { ErrorResponse } from "@remix-run/router";
+import { isNullishCoalesce } from "typescript";
+import { IUserRegister } from "../TypeScript";
+export const ValidRegister = (data: IUserRegister) => {
+  const { name, account, password, cf_password } = data;
+  const errs: string[] = [];
   if (!name) {
     errs.push("please add your name");
   } else if (name.length > 20) {
@@ -20,13 +17,14 @@ export const validRegister = async (
 
   if (password.length < 6) {
     errs.push("password must be at least 6 chars");
+  } else if (password !== cf_password) {
+    errs.push("Cofirm password did not match");
   }
 
-  if (errs.length > 0) {
-    return res.status(400).json({ msg: errs });
-  } else {
-    return next();
-  }
+  return {
+    errMsg: errs,
+    errLength: errs.length,
+  };
 };
 
 export const validatePhone = (phone: string) => {
