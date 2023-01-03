@@ -43,16 +43,17 @@ const authCtrl = {
         sendEmail(account, url, "Xac nhan dia chi email");
         return res.json({ msg: "success! Please check your email" });
       }
-
+      console.log("CONSOLE REGISTER ACTIVETOKEN", active_token);
       return res.json({
         status: "OK",
         msg: "register success",
         data: newUser,
         active_token,
       });
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.code });
     }
   },
   registerPro: async (req: Request, res: Response) => {
@@ -78,22 +79,22 @@ const authCtrl = {
       const userToSave = new User(newUser);
       await userToSave.save();
 
-
       return res.json({
         status: "OK",
         msg: "register production success",
         data: newUser,
-        
       });
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.code });
     }
   },
 
   activeAccount: async (req: Request, res: Response) => {
     try {
       const { active_token } = req.body;
+      console.log("CONSOLE ACTIVEACCOUNT ", active_token);
       const decode = <IDecodedToken>(
         jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
       );
@@ -103,9 +104,20 @@ const authCtrl = {
       const user = new User(newUser);
       await user.save();
       return res.json("actived");
-    } catch (err) {
+    } catch (err: any) {
+      console.error(err);
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+
+
+      let errMsg = "something wrong";
+      if (err.code === 11000) {
+        errMsg = Object.keys(err.keyValue)[0] + " already exists.";
+      } else {
+        let name = Object.keys(err.errors)[0];
+        errMsg = err.errors[`${name}`].message;
+      }
+      return res.status(500).json({ msg: errMsg });
     }
   },
   login: async (req: Request, res: Response) => {
@@ -116,10 +128,10 @@ const authCtrl = {
       if (!user) return res.status(400).json({ msg: "login failed" });
 
       loginUser(user, password, res);
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.code });
     }
   },
   refreshToken: async (req: Request, res: Response) => {
@@ -136,18 +148,20 @@ const authCtrl = {
         return res.status(400).json({ msg: "This account does not exist" });
       const access_token = generateAccessToken({ id: user._id });
       res.json({ access_token });
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.code });
     }
   },
   logout: async (req: Request, res: Response) => {
     try {
       res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
       return res.json({ msg: " logged out" });
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.code });
     }
   },
 };
