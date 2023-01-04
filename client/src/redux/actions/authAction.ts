@@ -1,5 +1,5 @@
 import { IUserLogin, IUserRegister } from "../../TypeScript";
-import { postAPI } from "../../utils/FetchData";
+import { getAPI, postAPI } from "../../utils/FetchData";
 import { AUTH, IAuthType } from "../types/authType";
 import { ALERT, IAlertType } from "../types/alertType";
 import { ValidRegister } from "../../utils/Valid";
@@ -9,16 +9,18 @@ export const login =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("login", userLogin);
-      console.log("???????????????????????login dispatch", res);
+
       dispatch({
         type: "AUTH",
         payload: res.data,
       });
 
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
+
+      localStorage.setItem("logged", "myusername");
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
-      console.log(err);
+ 
     }
   };
 export const register =
@@ -34,10 +36,25 @@ export const register =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("register", userRegister);
-      console.log(res);
+     
       dispatch({ type: ALERT, payload: { success: "Register Success!" } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
-      console.log(err);
+      
+    }
+  };
+export const refreshToken =
+  () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+    const logged = localStorage.getItem("logged");
+    if (!logged) return;
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+      const res = await getAPI("refresh_token");
+      dispatch({ type: AUTH, payload: res.data });
+
+      dispatch({ type: ALERT, payload: {} });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+   
     }
   };

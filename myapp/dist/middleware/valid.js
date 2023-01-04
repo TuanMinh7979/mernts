@@ -20,9 +20,7 @@ const validRegister = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         errs.push("please check your name length");
     }
     if (!account) {
-        return res
-            .status(400)
-            .json({ msg: "please add your email or phone number" });
+        errs.push("please add your email or phone number");
     }
     else if (!(0, exports.validatePhone)(account) && !(0, exports.validateEmail)(account)) {
         errs.push("please check your account format");

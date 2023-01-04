@@ -9,4 +9,7 @@ const valid_1 = require("../middleware/valid");
 const router = express_1.default.Router();
 router.post("/register", valid_1.validRegister, authCtrl_1.default.register);
 router.post("/active", authCtrl_1.default.activeAccount);
+router.post("/login", authCtrl_1.default.login);
+router.get("/logout", authCtrl_1.default.logout);
+router.get("/refresh_token", authCtrl_1.default.refreshToken);
 exports.default = router;

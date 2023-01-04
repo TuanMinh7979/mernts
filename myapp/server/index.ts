@@ -21,5 +21,5 @@ app.use("/api", routes.authRouter);
 import "./config/database";
 const PORT = 5001;
 app.listen(PORT, () => {
-  console.log("connecte.....");
+  console.log("connected.....");
 });

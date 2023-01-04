@@ -109,7 +109,6 @@ const authCtrl = {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
 
-
       let errMsg = "something wrong";
       if (err.code === 11000) {
         errMsg = Object.keys(err.keyValue)[0] + " already exists.";
@@ -140,6 +139,8 @@ const authCtrl = {
 
       if (!rf_token)
         return res.status(400).json({ msg: "Please login before" });
+
+      console.log("------------cookie check", req.cookies);
       let a = jwt.verify(rf_token, `${process.env.REFRESH_SECRET}`);
 
       const decoded = <IDecodedToken>a;
@@ -147,7 +148,7 @@ const authCtrl = {
       if (!user)
         return res.status(400).json({ msg: "This account does not exist" });
       const access_token = generateAccessToken({ id: user._id });
-      res.json({ access_token });
+      res.json({ access_token, user });
     } catch (err: any) {
       if (err instanceof Error)
         return res.status(500).json({ msg: err.message });
@@ -155,6 +156,7 @@ const authCtrl = {
     }
   },
   logout: async (req: Request, res: Response) => {
+    console.log("LOGOUT ........")
     try {
       res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
       return res.json({ msg: " logged out" });

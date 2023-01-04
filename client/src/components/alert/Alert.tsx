@@ -5,7 +5,6 @@ import { RootStore } from "../../TypeScript";
 import Toast from "./Toast";
 export const Alert = () => {
   const { alertState } = useSelector((state: RootStore) => state);
-  console.log("-------Alert state(reducerreturn ) now is: ", alertState);
   //MAGIC HEAR//
   return (
     <div>
