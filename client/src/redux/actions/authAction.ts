@@ -9,16 +9,13 @@ export const login =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("login", userLogin);
-      console.log(res);
+      console.log("???????????????????????login dispatch", res);
       dispatch({
         type: "AUTH",
-        payload: {
-          token: res.data.access_token,
-          user: res.data.user,
-        },
+        payload: res.data,
       });
 
-      dispatch({ type: ALERT, payload: { success: "Login Success!" } });
+      dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
       console.log(err);

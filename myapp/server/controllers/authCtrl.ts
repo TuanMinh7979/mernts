@@ -178,7 +178,7 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
   });
 
   res.json({
-    msg: "login sc",
+    msg: "login success server msg",
     access_token,
     user: { ...user._doc, password: "" },
   });
