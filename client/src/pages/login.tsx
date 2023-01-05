@@ -1,10 +1,22 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import LoginPass from "../components/auth/LoginPass";
 import LoginSMS from "../components/auth/LoginSMS";
+import { useSelector } from "react-redux";
+import { RootStore } from "../TypeScript";
 
 const Login = () => {
   const [sms, setSms] = useState(false);
+  const navigate = useNavigate();
+
+  const { authState } = useSelector((state: RootStore) => state);
+  useEffect(() => {
+    if (authState.access_token) {
+      console.log("GO TO home page")
+      navigate("/");
+    }
+      
+  }, [authState.access_token]);
   return (
     <div className="auth_page">
       <div className="auth_box">

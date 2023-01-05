@@ -136,7 +136,6 @@ const authCtrl = {
   refreshToken: async (req: Request, res: Response) => {
     try {
       const rf_token = req.cookies.refreshtoken;
-
       if (!rf_token)
         return res.status(400).json({ msg: "Please login before" });
 
@@ -156,9 +155,11 @@ const authCtrl = {
     }
   },
   logout: async (req: Request, res: Response) => {
-    console.log("LOGOUT ........")
     try {
-      res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
+      res.clearCookie("refreshtoken");
+      console.log(res.cookie);
+      //react app will remove :
+      // localStorage.removeItem("logged");
       return res.json({ msg: " logged out" });
     } catch (err: any) {
       if (err instanceof Error)
@@ -176,7 +177,6 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
   const refresh_token = generateRefreshToken({ id: user._id });
   res.cookie("refreshtoken", refresh_token, {
     httpOnly: true,
-    path: "/api/refresh_token",
   });
 
   res.json({

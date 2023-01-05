@@ -20,7 +20,6 @@ export const login =
       localStorage.setItem("logged", "myusername");
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
- 
     }
   };
 export const register =
@@ -36,17 +35,23 @@ export const register =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("register", userRegister);
-     
+
       dispatch({ type: ALERT, payload: { success: "Register Success!" } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
-      
     }
   };
 export const refreshToken =
   () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     const logged = localStorage.getItem("logged");
-    if (!logged) return;
+    //if not logged return
+
+    if (!logged) {
+      console.log("not logged return");
+      return;
+    }
+    //if login get new token
+    console.log("logged=> get token ");
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await getAPI("refresh_token");
@@ -55,6 +60,16 @@ export const refreshToken =
       dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
-   
+    }
+  };
+
+export const logout =
+  () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+    try {
+      localStorage.removeItem("logged");
+      await getAPI("logout");
+      window.location.href = "/";
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };

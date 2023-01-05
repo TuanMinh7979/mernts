@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     dispatch(refreshToken());
-  }, []);
+  }, [dispatch]);
   return (
     <div className="container">
       <BrowserRouter>
