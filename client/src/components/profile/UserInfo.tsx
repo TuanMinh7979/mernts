@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { urlToHttpOptions } from "url";
-import { RootStore, InputChange, IUserProfile } from "../../TypeScript";
-
+import { RootStore, InputChange, IUserProfile, FormSubmit } from "../../TypeScript";
+import { updateUser } from "../../redux/actions/profileAction";
 import NotFound from "../global/NotFound";
 const UserInfo = () => {
   const initState = {
@@ -24,6 +24,13 @@ const UserInfo = () => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
+
+  const hdlSubmit = (e: FormSubmit) => {
+    e.preventDefault()
+    if(avatar || name){
+        dispatch(updateUser(avatar as File, name, authState))
+    }
+  };
   console.log(user);
   const hdlChangeFile = (e: InputChange) => {
     const target = e.target as HTMLInputElement;
@@ -37,7 +44,7 @@ const UserInfo = () => {
   if (!authState.user) return <NotFound />;
 
   return (
-    <form className="profile_info">
+    <form className="profile_info" onSubmit={hdlSubmit}>
       <div className="info_avatar">
         <img
           src={
@@ -116,7 +123,9 @@ const UserInfo = () => {
         </div>
       </div>
 
-      <button className="btn btn-info w-100" type="submit">SAVE</button>
+      <button className="btn btn-info w-100" type="submit">
+        SAVE
+      </button>
     </form>
   );
 };

@@ -151,9 +151,11 @@ const authCtrl = {
         }
     }),
     logout: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("LOGOUT ........");
         try {
-            res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
+            res.clearCookie("refreshtoken");
+            console.log(res.cookie);
+            //react app will remove :
+            // localStorage.removeItem("logged");
             return res.json({ msg: " logged out" });
         }
         catch (err) {
@@ -171,7 +173,6 @@ const loginUser = (user, password, res) => __awaiter(void 0, void 0, void 0, fun
     const refresh_token = (0, generateToken_1.generateRefreshToken)({ id: user._id });
     res.cookie("refreshtoken", refresh_token, {
         httpOnly: true,
-        path: "/api/refresh_token",
     });
     res.json({
         msg: "login success server msg",
