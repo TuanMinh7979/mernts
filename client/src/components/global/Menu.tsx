@@ -51,7 +51,7 @@ const Menu = () => {
           </span>
           <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <Link className="dropdown-item" to="/profile">
+              <Link className="dropdown-item" to={`/profile/${authState.user._id}`}>
                 Profile
               </Link>
               <li>

@@ -4,6 +4,8 @@ import LoginPass from "../components/auth/LoginPass";
 import LoginSMS from "../components/auth/LoginSMS";
 import { useSelector } from "react-redux";
 import { RootStore } from "../TypeScript";
+import SocialLogin from "../components/auth/SocialLogin";
+
 
 const Login = () => {
   const [sms, setSms] = useState(false);
@@ -20,7 +22,8 @@ const Login = () => {
   return (
     <div className="auth_page">
       <div className="auth_box">
-        <h3 className="text-uppecase text-center mb-4"></h3>
+        <h3 className="text-uppecase text-center mb-4">LOGIN</h3>
+        <SocialLogin></SocialLogin>
         {sms ? <LoginSMS /> : <LoginPass />}
 
         <small className="row my-2 text-primary" style={{ cursor: "pointer" }}>
