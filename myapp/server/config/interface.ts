@@ -1,4 +1,5 @@
 import { Document, StringSchemaDefinition } from "mongoose";
+import { Request } from "express";
 export interface INewUser {
   name: string;
   account: string;
@@ -20,4 +21,7 @@ export interface IUser extends Document {
   role: string;
   type: string;
   _doc: object;
+}
+export interface IReqAuth extends Request {
+  user?: IUser;
 }

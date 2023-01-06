@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent } from "react";
 import rootReducer from "./redux/reducers";
+
 export type InputChange = ChangeEvent<HTMLInputElement>;
 
 export type FormSubmit = FormEvent<HTMLFormElement>;
@@ -15,7 +16,7 @@ export interface IUserLogin {
 }
 
 export interface IUser extends IUserLogin {
-  avatar: string ;
+  avatar: string;
   createdAt: string;
   name: string;
   role: string;
@@ -23,7 +24,6 @@ export interface IUser extends IUserLogin {
   updatedAt: string;
   _id: string;
 }
-
 
 export interface IAlert {
   loading?: boolean;
@@ -38,8 +38,9 @@ export interface IUserRegister extends IUserLogin {
   cf_password: string;
 }
 
-export interface IUserProfile extends IUserRegister{
-  avatar: string | File
+export interface IUserProfile extends IUserRegister {
+  avatar: string | File;
 }
+
 
 export type RootStore = ReturnType<typeof rootReducer>;

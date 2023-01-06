@@ -17,6 +17,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 app.use("/api", routes.authRouter);
+app.use("/api", routes.userRouter);
 
 import "./config/database";
 const PORT = 5001;
