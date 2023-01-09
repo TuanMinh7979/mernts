@@ -4,6 +4,7 @@ import { IAuth, IAuthType, AUTH } from "../types/authType";
 
 import { checkImage, imageUpload } from "../../utils/ImageUpload";
 import { patchAPI } from "../../utils/FetchData";
+import { checkPassword } from "../../utils/Valid";
 export const updateUser =
   (avatar: File, name: string, auth: IAuth) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
@@ -52,6 +53,21 @@ export const updateUser =
         payload: newAuthState,
       });
 
+      dispatch({ type: ALERT, payload: { success: res.data.msg } });
+    } catch (e: any) {
+      dispatch({ type: ALERT, payload: { error: e.response.data.msg } });
+    }
+  };
+
+export const resetPassword =
+  (password: string, cf_password: string, token: string) =>
+  async (dispatch: Dispatch<IAlertType | IAuthType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+      const msg = checkPassword(password, cf_password);
+      if (msg) return dispatch({ type: ALERT, payload: { error: msg } });
+
+      const res = await patchAPI("reset_password", { password }, token);
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (e: any) {
       dispatch({ type: ALERT, payload: { error: e.response.data.msg } });

@@ -10,8 +10,7 @@ import OtherInfo from "../../components/profile/OtherInfo";
 const Profile = () => {
   const { authState } = useSelector((state: RootStore) => state);
   const { slug } = useParams();
-  console.log(authState.user?._id, "=====", slug);
-  console.log(authState.user?._id === slug);
+ 
 
   return (
     <div className="row my-3">

@@ -15,12 +15,8 @@ export const ValidRegister = (data: IUserRegister) => {
     errs.push("please check your account format");
   }
 
-  if (password.length < 6) {
-    errs.push("password must be at least 6 chars");
-  } else if (password !== cf_password) {
-    errs.push("Cofirm password did not match");
-  }
-
+  const msg = checkPassword(password, cf_password);
+  if (msg) errs.push(msg);
   return {
     errMsg: errs,
     errLength: errs.length,
@@ -35,4 +31,12 @@ export const validateEmail = (email: string) => {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+};
+
+export const checkPassword = (password: string, cf_password: string) => {
+  if (password.length < 6) {
+    return "password must at least 6 chars";
+  } else if (password !== cf_password) {
+    return "Confirm password did not match";
+  }
 };

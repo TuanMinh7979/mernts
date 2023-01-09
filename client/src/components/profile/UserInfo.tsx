@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { urlToHttpOptions } from "url";
+import { resetPassword } from "../../redux/actions/profileAction";
 import {
   RootStore,
   InputChange,
@@ -19,7 +19,6 @@ const UserInfo = () => {
   };
   const { authState } = useSelector((state: RootStore) => state);
 
-  console.log("-----------auth state", authState);
   const dispatch = useDispatch();
 
   const [user, setUser] = useState<IUserProfile>(initState);
@@ -32,13 +31,20 @@ const UserInfo = () => {
     setUser({ ...user, [name]: value });
   };
 
-const hdlSubmit = (e: FormSubmit) => {
+  const hdlSubmit = (e: FormSubmit) => {
     e.preventDefault();
     if (avatar || name) {
+      console.log("USERINFO PAGE dispatch updateuser");
       dispatch(updateUser(avatar as File, name, authState));
     }
+
+    if (password && authState.access_token) {
+      console.log("USERINFO PAGE dispatch resetPassword");
+
+      dispatch(resetPassword(password, cf_password, authState.access_token));
+    }
   };
-  console.log(user);
+
   const hdlChangeFile = (e: InputChange) => {
     const target = e.target as HTMLInputElement;
     const files = target.files;
