@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { urlToHttpOptions } from "url";
-import { RootStore, InputChange, IUserProfile, FormSubmit } from "../../TypeScript";
+import {
+  RootStore,
+  InputChange,
+  IUserProfile,
+  FormSubmit,
+} from "../../TypeScript";
 import { updateUser } from "../../redux/actions/profileAction";
 import NotFound from "../global/NotFound";
 const UserInfo = () => {
@@ -13,6 +18,8 @@ const UserInfo = () => {
     cf_password: "",
   };
   const { authState } = useSelector((state: RootStore) => state);
+
+  console.log("-----------auth state", authState);
   const dispatch = useDispatch();
 
   const [user, setUser] = useState<IUserProfile>(initState);
@@ -25,10 +32,10 @@ const UserInfo = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const hdlSubmit = (e: FormSubmit) => {
-    e.preventDefault()
-    if(avatar || name){
-        dispatch(updateUser(avatar as File, name, authState))
+const hdlSubmit = (e: FormSubmit) => {
+    e.preventDefault();
+    if (avatar || name) {
+      dispatch(updateUser(avatar as File, name, authState));
     }
   };
   console.log(user);

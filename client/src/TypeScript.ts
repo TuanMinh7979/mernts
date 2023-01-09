@@ -25,11 +25,7 @@ export interface IUser extends IUserLogin {
   _id: string;
 }
 
-export interface IAlert {
-  loading?: boolean;
-  success?: string | string[];
-  error?: string | string[];
-}
+
 
 export interface IUserRegister extends IUserLogin {
   name: string;
