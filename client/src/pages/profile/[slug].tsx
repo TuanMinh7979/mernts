@@ -18,7 +18,6 @@ const Profile = () => {
       <div className="col-md-5 mb-3">
         {authState.user?._id === slug ? <UserInfo /> : <OtherInfo />}
       </div>
-
       <div className="col-md-7">
         <h3>
           <UserBlogs></UserBlogs>
