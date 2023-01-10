@@ -5,12 +5,16 @@ import Header from "./components/global/Header";
 import Footer from "./components/global/Footer";
 import { Alert } from "./components/alert/Alert";
 import { useDispatch } from "react-redux";
+
 import { refreshToken } from "./redux/actions/authAction";
+import { getCates } from "./redux/actions/categoryAction";
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(refreshToken());
+    dispatch(getCates());
+    
   }, [dispatch]);
   return (
     <div className="container">

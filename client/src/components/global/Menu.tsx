@@ -33,7 +33,13 @@ const Menu = () => {
           </Link>
         </li>
       ))}
-
+      {authState.user?.role === "admin" && (
+        <li className={`nav-item ${isActive("/category")}`}>
+          <Link to="/category" className="nav-link">
+            Category
+          </Link>
+        </li>
+      )}
       {authState.user && (
         <li className="nav-item dropdown">
           <span
@@ -51,12 +57,14 @@ const Menu = () => {
           </span>
           <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <Link className="dropdown-item" to={`/profile/${authState.user._id}`}>
+              <Link
+                className="dropdown-item"
+                to={`/profile/${authState.user._id}`}
+              >
                 Profile
               </Link>
               <li>
                 <Link
-                  
                   to="/"
                   className="dropdown-item"
                   onClick={() => dispatch(logout())}

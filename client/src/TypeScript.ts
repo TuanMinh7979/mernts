@@ -25,8 +25,6 @@ export interface IUser extends IUserLogin {
   _id: string;
 }
 
-
-
 export interface IUserRegister extends IUserLogin {
   name: string;
   // account: string;
@@ -38,5 +36,12 @@ export interface IUserProfile extends IUserRegister {
   avatar: string | File;
 }
 
-
 export type RootStore = ReturnType<typeof rootReducer>;
+
+//for state
+export interface ICategory {
+  name: string;
+  createAt: string;
+  updatedAt: string;
+  _id: string;
+}
