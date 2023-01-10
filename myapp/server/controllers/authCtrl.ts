@@ -31,6 +31,10 @@ const authCtrl = {
         account,
         password: passwordHash,
       };
+      //save ngay lap tuc //FAKE
+      const userToSave = new User(newUser);
+      await userToSave.save();
+      //FAKE
       //active to save
 
       const active_token = generateActiveToken({
