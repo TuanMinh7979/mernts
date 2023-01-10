@@ -1,9 +1,10 @@
 import { ErrorResponse } from "@remix-run/router";
 import { Dispatch } from "redux";
 import { ALERT, IAlertType } from "../types/alertType";
-import { postAPI, getAPI, patchAPI } from "../../utils/FetchData";
+import { postAPI, getAPI, patchAPI, deleteAPI } from "../../utils/FetchData";
 import {
   CREATE_CATE,
+  DELETE_CATE,
   GET_CATES,
   ICategoryType,
   UPDATE_CATE,
@@ -42,6 +43,20 @@ export const updateCategory =
       console.log(res);
 
       dispatch({ type: UPDATE_CATE, payload: data });
+      dispatch({ type: ALERT, payload: { loading: false } });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };
+export const deteteCategory =
+  (id: string, token: string) =>
+  async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+      const res = await deleteAPI(`category/${id}`, token );
+      console.log(res);
+
+      dispatch({ type: DELETE_CATE, payload: id });
       dispatch({ type: ALERT, payload: { loading: false } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });

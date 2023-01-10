@@ -6,6 +6,7 @@ import { FormSubmit, RootStore, ICategory } from "../TypeScript";
 import {
   createCategory,
   updateCategory,
+  deteteCategory,
 } from "../redux/actions/categoryAction";
 
 import NotFound from "../components/global/NotFound";
@@ -34,9 +35,13 @@ const Category = () => {
     }
 
     setName("");
-    setEdit(null)
+    setEdit(null);
   };
 
+  const hdlDel = (id: string) => {
+    if (!authState.access_token) return;
+    dispatch(deteteCategory(id, authState.access_token));
+  };
   if (authState.user?.role !== "admin") return <NotFound />;
   return (
     <div className="category">
@@ -70,7 +75,10 @@ const Category = () => {
                   className="fas fa-edit mx-2"
                   onClick={() => setEdit(category)}
                 />
-                <i className="fas fa-trash-alt" />
+                <i
+                  className="fas fa-trash-alt"
+                  onClick={() => hdlDel(category._id)}
+                />
               </div>
             </div>
           ))}

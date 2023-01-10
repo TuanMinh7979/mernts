@@ -1,4 +1,9 @@
-import { CREATE_CATE, GET_CATES, UPDATE_CATE } from "../types/categoryType";
+import {
+  CREATE_CATE,
+  GET_CATES,
+  UPDATE_CATE,
+  DELETE_CATE,
+} from "../types/categoryType";
 import { ICategory } from "../../TypeScript";
 import * as type from "../types/categoryType";
 const categoryReducer = (
@@ -16,6 +21,8 @@ const categoryReducer = (
         if (item._id === action.payload._id) return action.payload;
         return item;
       });
+    case DELETE_CATE:
+      return state.filter((item) => item._id !== action.payload);
     default:
       return state;
   }
