@@ -2,7 +2,7 @@ import { IUser } from "../../TypeScript";
 import { ICategory } from "../../TypeScript";
 export const CREATE_CATE = "CREATE_CATE";
 export const GET_CATES = "GET_CATES";
-
+export const UPDATE_CATE = "UPDATE_CATE";
 
 // action
 export interface ICreate {
@@ -14,7 +14,9 @@ export interface IGet {
   type: typeof GET_CATES;
   payload: ICategory[];
 }
+export interface IUpdate {
+  type: typeof UPDATE_CATE;
+  payload: ICategory;
+}
 
-export type ICategoryType = ICreate | IGet
-
-
+export type ICategoryType = ICreate | IGet | IUpdate;

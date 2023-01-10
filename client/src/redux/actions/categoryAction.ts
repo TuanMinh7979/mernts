@@ -1,8 +1,14 @@
 import { ErrorResponse } from "@remix-run/router";
 import { Dispatch } from "redux";
 import { ALERT, IAlertType } from "../types/alertType";
-import { postAPI, getAPI } from "../../utils/FetchData";
-import { CREATE_CATE, GET_CATES } from "../types/categoryType";
+import { postAPI, getAPI, patchAPI } from "../../utils/FetchData";
+import {
+  CREATE_CATE,
+  GET_CATES,
+  ICategoryType,
+  UPDATE_CATE,
+} from "../types/categoryType";
+import { ICategory } from "../../TypeScript";
 export const createCategory =
   (name: string, token: string) => async (dispatch: Dispatch<IAlertType>) => {
     try {
@@ -27,3 +33,17 @@ export const getCates = () => async (dispatch: Dispatch<IAlertType>) => {
     dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
   }
 };
+export const updateCategory =
+  (data: ICategory, token: string) =>
+  async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+      const res = await patchAPI(`category/${data._id}`, data, token);
+      console.log(res);
+
+      dispatch({ type: UPDATE_CATE, payload: data });
+      dispatch({ type: ALERT, payload: { loading: false } });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };

@@ -1,25 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { FormSubmit, RootStore } from "../TypeScript";
+import { FormSubmit, RootStore, ICategory } from "../TypeScript";
 
-import { createCategory } from "../redux/actions/categoryAction";
+import {
+  createCategory,
+  updateCategory,
+} from "../redux/actions/categoryAction";
 
 import NotFound from "../components/global/NotFound";
 
 const Category = () => {
   const [name, setName] = useState("");
+  const [edit, setEdit] = useState<ICategory | null>(null);
 
   const { authState, categories } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (edit) setName(edit.name);
+  }, [edit]);
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
     if (!authState.access_token || !name) return;
 
-    dispatch(createCategory(name, authState.access_token));
+    if (edit) {
+      if (edit.name === name) return;
+      const data = { ...edit, name };
+      dispatch(updateCategory(data, authState.access_token));
+    } else {
+      dispatch(createCategory(name, authState.access_token));
+    }
 
     setName("");
+    setEdit(null)
   };
 
   if (authState.user?.role !== "admin") return <NotFound />;
@@ -29,6 +44,9 @@ const Category = () => {
         <label htmlFor="category">Category</label>
 
         <div className="d-flex">
+          {edit && (
+            <i className="fas fa-times mx-2" onClick={() => setEdit(null)} />
+          )}
           <input
             type="text"
             name="category"
@@ -37,7 +55,7 @@ const Category = () => {
             onChange={(e) => setName(e.target.value)}
           />
 
-          <button type="submit">Create</button>
+          <button type="submit">{edit ? "Update" : "Create"}</button>
         </div>
       </form>
 
@@ -48,7 +66,10 @@ const Category = () => {
               <p className="m-0 text-capitalize">{category.name}</p>
 
               <div>
-                <i className="fas fa-edit mx-2" />
+                <i
+                  className="fas fa-edit mx-2"
+                  onClick={() => setEdit(category)}
+                />
                 <i className="fas fa-trash-alt" />
               </div>
             </div>

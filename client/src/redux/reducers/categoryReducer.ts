@@ -1,4 +1,4 @@
-import { CREATE_CATE, GET_CATES } from "../types/categoryType";
+import { CREATE_CATE, GET_CATES, UPDATE_CATE } from "../types/categoryType";
 import { ICategory } from "../../TypeScript";
 import * as type from "../types/categoryType";
 const categoryReducer = (
@@ -11,6 +11,11 @@ const categoryReducer = (
     case GET_CATES:
       console.log("action get cate running...");
       return action.payload;
+    case UPDATE_CATE:
+      return state.map((item) => {
+        if (item._id === action.payload._id) return action.payload;
+        return item;
+      });
     default:
       return state;
   }
