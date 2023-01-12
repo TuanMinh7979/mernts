@@ -25,3 +25,4 @@ export interface IUser extends Document {
 export interface IReqAuth extends Request {
   user?: IUser;
 }
+
