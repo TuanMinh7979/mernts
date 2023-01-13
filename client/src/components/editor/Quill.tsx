@@ -7,11 +7,14 @@ import React, {
 } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
+import { useDispatch } from "react-redux";
+import { ALERT } from "../../redux/types/alertType";
+import { checkImage, imageUpload } from "../../utils/ImageUpload";
 interface IProps {
   setBody: (value: string) => void;
 }
 const Quill: React.FC<IProps> = ({ setBody }) => {
+  const dispatch = useDispatch();
   const modules = { toolbar: { container } };
   const quillRef = useRef<ReactQuill>(null);
 
@@ -19,30 +22,53 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
     setBody(e);
   };
 
-  const hdlChangeImage = () => {
-    console.log("???????????????change image now");
-  };
+  //after reload page and reload this function
+  const hdlChangeImage = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    console.log(input);
+    input.click();
+    input.onchange = async () => {
+      const files = input.files;
+      if (!files) {
+        return dispatch({
+          type: ALERT,
+          payload: { error: "File does not exist" },
+        });
+      }
+
+      const file = files[0];
+      const check = checkImage(file);
+      if (check) {
+        return dispatch({
+          type: ALERT,
+          payload: { error: check },
+        });
+      }
+
+      dispatch({ type: ALERT, payload: { loading: true } });
+      const photo = await imageUpload(file);
+      console.log(photo);
+      const quill = quillRef.current;
+
+      const range = quill?.getEditor().getSelection()?.index;
+      if (range !== undefined) {
+        quill?.getEditor().insertEmbed(range, "image", `${photo.url}`);
+      }
+
+      dispatch({ type: ALERT, payload: { loading: false } });
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     const quill = quillRef.current;
     if (!quill) return;
-
     let toolbar = quill.getEditor().getModule("toolbar");
     toolbar.addHandler("image", hdlChangeImage);
   }, [hdlChangeImage]);
 
-  const [products, setProduct] = useState<any>([]);
-  const changeProduct = () => {
-    setProduct([...products, 1]);
-  };
-  useEffect(() => {
-    console.log("use effect call ");
-  }, [products]);
-  useMemo(() => {
-    console.log("use memo call ");
-  }, [products]);
-
-  console.log("compoenent render ")
+  console.log("compoenent render ");
 
   //cis
 
@@ -55,8 +81,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
         ref={quillRef}
         onChange={(e) => hdlChange(e)}
       ></ReactQuill>
-
-      <button onClick={changeProduct}>Click me</button>
+      <button className="btn btn-dark d-block mx-auto">Create Post</button>
     </div>
   );
 };
