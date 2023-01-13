@@ -33,13 +33,14 @@ const Menu = () => {
           </Link>
         </li>
       ))}
-      {authState.user?.role === "admin" && (
+
+      {authState.user?.role === "admin" && 
         <li className={`nav-item ${isActive("/category")}`}>
           <Link to="/category" className="nav-link">
             Category
           </Link>
         </li>
-      )}
+      }
       {authState.user && (
         <li className="nav-item dropdown">
           <span

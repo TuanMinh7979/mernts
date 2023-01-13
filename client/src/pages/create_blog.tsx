@@ -4,9 +4,9 @@ import NotFound from "../components/global/NotFound";
 import { RootStore } from "../TypeScript";
 import CreateForm from "../components/card/CreateForm";
 import CardHoriz from "../components/card/CardHoriz";
+import Quill from "../components/editor/Quill";
 const CreateBlog = () => {
   const initState = {
-    
     user: "",
     title: "",
     content: "",
@@ -16,6 +16,8 @@ const CreateBlog = () => {
     createdAt: new Date().toISOString(),
   };
   const [blog, setBlog] = useState(initState);
+
+  const [body, setBody] = useState("");
 
   const { authState, categories } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
@@ -34,6 +36,7 @@ const CreateBlog = () => {
           <CardHoriz blog={blog} />
         </div>
       </div>
+      <Quill setBody={setBody} />
     </div>
   );
 };
