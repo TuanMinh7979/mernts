@@ -55,7 +55,7 @@ export const validCreateBlog = ({
     err.push("Title is up to 50 characters long.");
   }
 
-  if (content.trim().length < 2000) {
+  if (content.trim().length < 200) {
     err.push("Content has at least 2000 characters.");
   }
 

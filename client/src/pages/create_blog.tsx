@@ -8,6 +8,8 @@ import Quill from "../components/editor/Quill";
 
 import { validCreateBlog } from "../utils/Valid";
 import { ALERT } from "../redux/types/alertType";
+import { imageUpload } from "../utils/ImageUpload";
+import { createBlog } from "../redux/actions/blogAction";
 const CreateBlog = () => {
   const initState = {
     user: "",
@@ -21,6 +23,7 @@ const CreateBlog = () => {
   const [blog, setBlog] = useState(initState);
 
   const [body, setBody] = useState("");
+  const [text, setText] = useState("");
 
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -29,25 +32,23 @@ const CreateBlog = () => {
 
   console.log("RENDER ");
   useEffect(() => {
-    console.log("luôn luôn gọi lần đầu kể cả có dependencies hay không");
     const div = divRef.current;
     if (!div) return; //neu khong return => undefine setBlog(content)=> content.length ERR => blank page
-    const content = div?.innerText as string;
-    console.log(content, "INNER TEXT --- BODY", body);
-    setBlog({ ...blog, content });
+    const text = div?.innerText as string;
+    console.log(text, "INNER TEXT --- BODY", body);
+    setText(text);
   }, [body]);
   const hdlSubmit = async () => {
     if (!authState.access_token) return;
 
-    // const div = divRef.current;
-    // const content = div?.innerText as string;
-    // console.log(content, "INNER TEXT --- BODY", body);
-    // setBlog({ ...blog, content });
-
-    const check = validCreateBlog({ ...blog });
+    const check = validCreateBlog({ ...blog, content: text });
     if (check.errLen !== 0) {
       return dispatch({ type: ALERT, payload: { error: check.errMsg } });
     }
+
+    let newData = { ...blog, content: body };
+
+    dispatch(createBlog(newData, authState.access_token));
   };
   if (!authState.access_token) return <NotFound />;
   return (
@@ -70,8 +71,7 @@ const CreateBlog = () => {
         dangerouslySetInnerHTML={{ __html: body }}
       ></div>
 
-      <small>{blog.content}</small>
-      <small>{blog.content.length}</small>
+      <small>{text.length}</small>
 
       <button onClick={hdlSubmit} className="btn btn-dark d-block mx-auto">
         Create Post

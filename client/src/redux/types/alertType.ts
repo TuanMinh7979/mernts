@@ -4,6 +4,8 @@ export interface IAlert {
   success?: string | string[];
   error?: string | string[];
 }
+
+//for type prop of action
 export const ALERT = "ALERT";
 
 //for action type
