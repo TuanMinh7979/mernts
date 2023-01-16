@@ -81,7 +81,6 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
         ref={quillRef}
         onChange={(e) => hdlChange(e)}
       ></ReactQuill>
-      <button className="btn btn-dark d-block mx-auto">Create Post</button>
     </div>
   );
 };

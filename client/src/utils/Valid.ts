@@ -1,6 +1,5 @@
-import { ErrorResponse } from "@remix-run/router";
-import { isNullishCoalesce } from "typescript";
-import { IUserRegister } from "../TypeScript";
+import { isTemplateMiddleOrTemplateTail } from "typescript";
+import { IUserRegister, IBlog } from "../TypeScript";
 export const ValidRegister = (data: IUserRegister) => {
   const { name, account, password, cf_password } = data;
   const errs: string[] = [];
@@ -39,4 +38,43 @@ export const checkPassword = (password: string, cf_password: string) => {
   } else if (password !== cf_password) {
     return "Confirm password did not match";
   }
+};
+
+//valid blcog
+export const validCreateBlog = ({
+  title,
+  content,
+  description,
+  thumbnail,
+  category,
+}: IBlog) => {
+  const err: string[] = [];
+  if (title.trim().length < 10) {
+    err.push("Title has at least 10 characters.");
+  } else if (title.trim().length > 50) {
+    err.push("Title is up to 50 characters long.");
+  }
+
+  if (content.trim().length < 2000) {
+    err.push("Content has at least 2000 characters.");
+  }
+
+  if (description.trim().length < 50) {
+    err.push("Description has at least 50 characters.");
+  } else if (description.trim().length > 200) {
+    err.push("Description is up to 200 characters long.");
+  }
+
+  if (!thumbnail) {
+    err.push("Thumbnail cannot be left blank.");
+  }
+
+  if (!category) {
+    err.push("Category cannot be left blank.");
+  }
+
+  return {
+    errMsg: err,
+    errLen: err.length,
+  };
 };
