@@ -56,7 +56,7 @@ export const validCreateBlog = ({
   }
 
   if (content.trim().length < 200) {
-    err.push("Content has at least 2000 characters.");
+    err.push("Content has at least 200 characters.");
   }
 
   if (description.trim().length < 50) {

@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use("/api", routes.authRouter);
 app.use("/api", routes.userRouter);
 app.use('/api', routes.categoryRouter);
+app.use('/api', routes.blogRouter);
 import "./config/database";
 const PORT = 5001;
 app.listen(PORT, () => {
