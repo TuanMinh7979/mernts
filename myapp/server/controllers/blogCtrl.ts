@@ -27,44 +27,111 @@ const blogCtrl = {
   },
   getHomeBlogs: async (req: Request, res: Response) => {
     try {
+    //   const blogs = await Blogs.aggregate([
+    //     {
+    //       //use for project in lk object
+    //       $lookup: {
+    //         from: "users",
+    //         let: { user_id: "$user" },
+    //         pipeline: [
+    //           { $match: { $expr: { $eq: ["$_id", "$$user_id"] } } },
+    //           { $project: { password: 0 } },
+    //         ],
+    //         as: "user",
+    //       },
+    //     },
+
+    //     //array to object
+    //     { $unwind: "$user" },
+
+    //     {
+    //       $lookup: {
+    //         from: "categories",
+    //         localField: "category",
+    //         foreignField: "_id",
+    //         as: "category",
+    //       },
+    //     },
+
+    //     { $unwind: "$category" },
+
+    //     { $sort: { createAt: -1 } },
+
+    //     {
+    //       $group: {
+    //         _id: "$category._id",
+    //         name: { $first: "$category.name" },
+    //         blogs: { $push: "$$ROOT" },
+    //         count: { $sum: 1 },
+    //       },
+    //     },
+
+    //     {
+    //       $project: {
+    //         blogs: {
+    //           $slice: ["$blogs", 0, 2]
+    //         },
+    //         count: 1,
+    //         name: 1
+    //       },
+    //     },
+    //   ]);
+
+
       const blogs = await Blogs.aggregate([
+        // User
         {
-          $lookup: {
+          $lookup:{
             from: "users",
             let: { user_id: "$user" },
             pipeline: [
               { $match: { $expr: { $eq: ["$_id", "$$user_id"] } } },
-              { $project: { password: 0 } },
+              { $project: { password: 0 }}
             ],
-            as: "user",
-          },
+            as: "user"
+          }
         },
-      ]);
+        // array -> object
+        { $unwind: "$user" },
+        // Category
+        {
+          $lookup: {
+            "from": "categories",
+            "localField": "category",
+            "foreignField": "_id",
+            "as": "category"
+          }
+        },
+        // array -> object
+        { $unwind: "$category" },
+        // Sorting
+        { $sort: { "createdAt": -1 } },
+        // Group by category
+        {
+          $group: {
+            _id: "$category._id",
+            name: { $first: "$category.name" },
+            blogs: { $push: "$$ROOT" },
+            count: { $sum: 1 }
+          }
+        },
+        // Pagination for blogs
+        {
+          $project: {
+            blogs: {
+              $slice: ['$blogs', 0, 3]
+            },
+            count: 1,
+            name: 1
+          }
+        }
+      ])
       res.json(blogs);
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
     }
   },
-  getHomeBlogsMy: async (req: Request, res: Response) => {
-    try {
-      //   const blogs = await Blogs.aggregate([
-      //     {
-      //       $lookup: {
-      //         from: "users",
-      //         localField: "user",
-      //         foreignField: "_id",
-      //         as: "user",
-      //       },
-      //     },
-      //   ]);
 
-      const blogs = await Blogs.find().populate("user");
-      res.json(blogs);
-    } catch (err: any) {
-      console.log(err);
-      return res.status(500).json({ msg: err.message });
-    }
-  },
   getHomeBlogs0: async (req: Request, res: Response) => {
     try {
       const blogs = await Blogs.find();

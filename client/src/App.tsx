@@ -8,13 +8,15 @@ import { useDispatch } from "react-redux";
 
 import { refreshToken } from "./redux/actions/authAction";
 import { getCates } from "./redux/actions/categoryAction";
+import { getHomeBlogs } from "./redux/actions/blogAction";
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(refreshToken());
+   //thay vi luu vao store ta se dispatch moi lan ung dung reload
     dispatch(getCates());
-    
+    dispatch(getHomeBlogs());
+    dispatch(refreshToken());
   }, [dispatch]);
   return (
     <div className="container">
