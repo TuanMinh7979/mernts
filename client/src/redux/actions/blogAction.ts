@@ -36,6 +36,7 @@ export const getHomeBlogs = () => async (dispatch: Dispatch<IAlertType>) => {
     const res = await getAPI("home/blogs");
 
     console.log(res);
+    dispatch({ type: GET_HOME_BLOGS, payload: res.data });
     dispatch({ type: ALERT, payload: { loading: false } });
   } catch (err: any) {
     dispatch({ type: ALERT, payload: { error: err.response.data.msg } });

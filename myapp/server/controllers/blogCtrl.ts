@@ -119,7 +119,7 @@ const blogCtrl = {
         {
           $project: {
             blogs: {
-              $slice: ['$blogs', 0, 3]
+              $slice: ['$blogs', 0, 2]
             },
             count: 1,
             name: 1

@@ -47,7 +47,7 @@ const categoryCtrl = {
 
     try {
       const category = await Categories.findByIdAndUpdate(req.params.id, {
-        $set: { name: req.body.name },
+        $set: { name: req.body.name.toLowerCase()},
       });
 
       res.json({ msg: "Update Success!" });
