@@ -93,7 +93,7 @@ const blogCtrl = {
     const { limit, skip } = Pagination(req);
 
     try {
-      console.log(req.params.category);
+
       const Data = await Blogs.aggregate([
         {
           $facet: {

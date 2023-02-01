@@ -138,6 +138,7 @@ const authCtrl = {
     }
   },
   refreshToken: async (req: Request, res: Response) => {
+    //neu da dang nhap thi moi lan truy cap ung dung(dispath reload page lam moi) se co 1 token khac nhau duoc lam moi
     try {
       const rf_token = req.cookies.refreshtoken;
       if (!rf_token)

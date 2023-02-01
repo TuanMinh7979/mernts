@@ -15,7 +15,7 @@ export const createCategory =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("category", { name }, token);
-      console.log(res);
+      
 
       dispatch({ type: CREATE_CATE, payload: res.data.newCategory });
       dispatch({ type: ALERT, payload: { loading: false } });
@@ -40,7 +40,7 @@ export const updateCategory =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await patchAPI(`category/${data._id}`, data, token);
-      console.log(res);
+
 
       dispatch({ type: UPDATE_CATE, payload: data });
       dispatch({ type: ALERT, payload: { loading: false } });
@@ -54,7 +54,7 @@ export const deteteCategory =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await deleteAPI(`category/${id}`, token );
-      console.log(res);
+
 
       dispatch({ type: DELETE_CATE, payload: id });
       dispatch({ type: ALERT, payload: { loading: false } });

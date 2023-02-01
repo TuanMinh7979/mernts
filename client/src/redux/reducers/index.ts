@@ -3,9 +3,11 @@ import authReducer from "./authReducers";
 import alertReducer from "./alertReducers";
 import categoryReducer from "./categoryReducer";
 import homeBlogsReducer from "./homeBlogReducer";
+import blogsCategoryReducers from "./blogsCategoryReducers";
 export default combineReducers({
   authState: authReducer,
   alertState: alertReducer,
   categories: categoryReducer,
-  homeBlogs: homeBlogsReducer
+  homeBlogs: homeBlogsReducer,
+  blogsCategory: blogsCategoryReducers
 });
