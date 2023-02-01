@@ -1,12 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
 import CardVert from "../components/card/CardVert";
+import Spinner from "../components/global/Spinner";
 import { RootStore } from "../TypeScript";
 
 const Home = () => {
   const { homeBlogs } = useSelector((state: RootStore) => state);
-  console.log("fbnjsadbnjfsdf", homeBlogs);
+
+  if (!homeBlogs || !homeBlogs.length) return <Spinner />;
   return (
     <div>
       <h2>Home Page 123</h2>
