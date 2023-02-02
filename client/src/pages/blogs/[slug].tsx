@@ -8,6 +8,7 @@ import CardVert from "../../components/card/CardVert";
 import NotFound from "../../components/global/NotFound";
 
 import "../../styles/blog_category.css";
+import Pagination from "../../components/global/Pagination";
 
 //MAGIC FUNDAMENTAL: everything chi dc hay nap lai class khi 1: reload
 //ke ca url thay doi(ma k reload) thi cung khong nap lai class
@@ -66,9 +67,9 @@ const BlogByCategory = () => {
               </>
             );
           })}
-
-        {blogs.length}
       </div>
+
+      {total > 1 && <Pagination total={total} />}
     </div>
   );
 };
