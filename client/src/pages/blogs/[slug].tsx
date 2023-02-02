@@ -4,6 +4,10 @@ import { Link, useParams } from "react-router-dom";
 import { getBlogByCategoryId } from "../../redux/actions/blogAction";
 import { IBlog, IParams, RootStore } from "../../TypeScript";
 import { useNavigate } from "react-router-dom";
+import CardVert from "../../components/card/CardVert";
+import NotFound from "../../components/global/NotFound";
+
+import "../../styles/blog_category.css";
 
 //MAGIC FUNDAMENTAL: everything chi dc hay nap lai class khi 1: reload
 //ke ca url thay doi(ma k reload) thi cung khong nap lai class
@@ -15,11 +19,6 @@ import { useNavigate } from "react-router-dom";
 //change State thì chạy lại class(new instace) nhưng state sẽ đc giữ lại
 //chi RE render khi setState("khac voi gia tri state truoc do")
 const BlogByCategory = () => {
-  console.log(
-    "______________________________________________________________________________START"
-  );
-  const navigate = useNavigate();
-
   const { categories, blogsCategory } = useSelector(
     (state: RootStore) => state
   );
@@ -32,37 +31,44 @@ const BlogByCategory = () => {
   //after render
 
   useEffect(() => {
-    const category = categories.find((item) => item._id === slug);
+    const category = categories.find((item) => item.name === slug);
     console.log("SetCategory Id=> Rerender ");
     if (category) setCategoryId(category._id);
   }, [slug, categories]);
 
   useEffect(() => {
-    console.log("CategoryId change=> dispatch new ");
     if (!categoryId) return;
-    console.log("AFTER rerender vào đây...");
+
     if (blogsCategory.every((item) => item.id !== categoryId)) {
       console.log("Nếu chưa tồn tại thì dispatch kéo về");
       dispatch(getBlogByCategoryId(categoryId));
     } else {
       let data = blogsCategory.find((item) => item.id === categoryId);
+      if (!data) return;
       if (data) {
         setBlogs(data.blogs);
         setTotal(data.total);
       }
     }
-  }, [categoryId]);
+  }, [categoryId, blogsCategory]);
   console.log("instance class function");
   console.log("-----", blogsCategory);
-  console.log(
-    "________________________________________________________________________________END"
-  );
 
+  if (!blogs) return <NotFound />;
   return (
-    <div className="blog_category">
-      <div className="show_blogs">{
-        // blogs?.map()
-      }</div>
+    <div className="blogs_category">
+      <div className="show_blogs">
+        {blogs &&
+          blogs.map((blog) => {
+            return (
+              <>
+                <CardVert key={blog._id} blog={blog}></CardVert>
+              </>
+            );
+          })}
+
+        {blogs.length}
+      </div>
     </div>
   );
 };
