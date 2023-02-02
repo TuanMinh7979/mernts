@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getBlogByCategoryId } from "../../redux/actions/blogAction";
-import { IParams, RootStore } from "../../TypeScript";
+import { IBlog, IParams, RootStore } from "../../TypeScript";
 import { useNavigate } from "react-router-dom";
 
 //MAGIC FUNDAMENTAL: everything chi dc hay nap lai class khi 1: reload
@@ -27,6 +27,8 @@ const BlogByCategory = () => {
   const { slug } = useParams();
 
   const [categoryId, setCategoryId] = useState("");
+  const [blogs, setBlogs] = useState<IBlog[]>([]);
+  const [total, setTotal] = useState(0);
   //after render
 
   useEffect(() => {
@@ -42,6 +44,12 @@ const BlogByCategory = () => {
     if (blogsCategory.every((item) => item.id !== categoryId)) {
       console.log("Nếu chưa tồn tại thì dispatch kéo về");
       dispatch(getBlogByCategoryId(categoryId));
+    } else {
+      let data = blogsCategory.find((item) => item.id === categoryId);
+      if (data) {
+        setBlogs(data.blogs);
+        setTotal(data.total);
+      }
     }
   }, [categoryId]);
   console.log("instance class function");
@@ -50,44 +58,11 @@ const BlogByCategory = () => {
     "________________________________________________________________________________END"
   );
 
-  const change = () => {
-    const months = [
-      "63bd024f138e97372b8600e9",
-      "63bd1033138e97372b860151",
-      "63bf68ea4ae5748fc1327058",
-    ];
-
-    const random = Math.floor(Math.random() * months.length);
-    console.log(random, months[random]);
-    console.log("Click change State dan den rerender");
-    setCategoryId(months[random]);
-  };
-
   return (
-    <div>
-      current :{slug}
-      <ul>
-        <li>
-          <Link to="/blogs/63bd024f138e97372b8600e9">
-            <button type="button">Java</button>
-          </Link>
-        </li>
-        <li>
-          <Link to="/blogs/63bd1033138e97372b860151">
-            <button type="button">Python</button>
-          </Link>
-        </li>
-        <li>
-          <Link to="/blogs/63bf68ea4ae5748fc1327058">
-            <button type="button">Js</button>
-          </Link>
-        </li>
-      </ul>
-      <br />
-      <div>{blogsCategory.toString()}</div>
-      <button onClick={() => change()}>
-        Change state and look xem co nap lai class hay khong
-      </button>
+    <div className="blog_category">
+      <div className="show_blogs">{
+        // blogs?.map()
+      }</div>
     </div>
   );
 };
