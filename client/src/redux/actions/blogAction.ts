@@ -45,14 +45,15 @@ export const getHomeBlogs = () => async (dispatch: Dispatch<IAlertType>) => {
   }
 };
 export const getBlogByCategoryId =
-  (catId: string) =>
+  (catId: string, searchParams: string) =>
   async (dispatch: Dispatch<IAlertType | IGetBlogsCatType>) => {
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
-      const res = await getAPI(`blogs/${catId}`);
+      console.log(`CURRENT API EP : blogs/${catId}${searchParams}`);
+      const res = await getAPI(`blogs/${catId}${searchParams}`);
       dispatch({
         type: GET_BLOGS_BY_CATID,
-        payload: { ...res.data, id: catId },
+        payload: { ...res.data, id: catId, searchParams },
       });
       dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {

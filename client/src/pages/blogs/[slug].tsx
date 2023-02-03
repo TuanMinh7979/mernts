@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { getBlogByCategoryId } from "../../redux/actions/blogAction";
 import { IBlog, IParams, RootStore } from "../../TypeScript";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +14,7 @@ import NotFound from "../../components/global/NotFound";
 
 import "../../styles/blog_category.css";
 import Pagination from "../../components/global/Pagination";
+import { CLIENT_RENEG_LIMIT } from "tls";
 
 //MAGIC FUNDAMENTAL: everything chi dc hay nap lai class khi 1: reload
 //ke ca url thay doi(ma k reload) thi cung khong nap lai class
@@ -20,6 +26,10 @@ import Pagination from "../../components/global/Pagination";
 //change State thì chạy lại class(new instace) nhưng state sẽ đc giữ lại
 //chi RE render khi setState("khac voi gia tri state truoc do")
 const BlogByCategory = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
   const { categories, blogsCategory } = useSelector(
     (state: RootStore) => state
   );
@@ -33,7 +43,7 @@ const BlogByCategory = () => {
 
   useEffect(() => {
     const category = categories.find((item) => item.name === slug);
-    console.log("SetCategory Id=> Rerender ");
+
     if (category) setCategoryId(category._id);
   }, [slug, categories]);
 
@@ -41,19 +51,20 @@ const BlogByCategory = () => {
     if (!categoryId) return;
 
     if (blogsCategory.every((item) => item.id !== categoryId)) {
-      console.log("Nếu chưa tồn tại thì dispatch kéo về");
-      dispatch(getBlogByCategoryId(categoryId));
+      dispatch(getBlogByCategoryId(categoryId, location.search));
     } else {
       let data = blogsCategory.find((item) => item.id === categoryId);
       if (!data) return;
-      if (data) {
-        setBlogs(data.blogs);
-        setTotal(data.total);
-      }
+
+      setBlogs(data.blogs);
+      setTotal(data.total);
     }
-  }, [categoryId, blogsCategory]);
-  console.log("instance class function");
-  console.log("-----", blogsCategory);
+  }, [categoryId, blogsCategory, location.search, dispatch]);
+
+  const navigateCb = (pageNum: number) => {
+    const search = `?page=${pageNum}`;
+    dispatch(getBlogByCategoryId(categoryId, search));
+  };
 
   if (!blogs) return <NotFound />;
   return (
@@ -69,7 +80,7 @@ const BlogByCategory = () => {
           })}
       </div>
 
-      {total > 1 && <Pagination total={total} />}
+      {total > 1 && <Pagination total={total} callback={navigateCb} />}
     </div>
   );
 };

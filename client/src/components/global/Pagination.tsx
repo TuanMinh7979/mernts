@@ -3,11 +3,15 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface IProps {
   total: number;
+  callback: (num: number) => void;
 }
 
-const Pagination: React.FC<IProps> = ({ total }) => {
+const Pagination: React.FC<IProps> = ({ total, callback }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
+
+  const [page, setPage] = useState(
+    parseInt(searchParams.get("page") as string) || 1
+  );
 
   const newArr = [...Array(total)].map((item, idx) => idx + 1);
   const navigate = useNavigate();
@@ -18,22 +22,26 @@ const Pagination: React.FC<IProps> = ({ total }) => {
   };
 
   const hdlPagination = (num: number) => {
-    console.log("page ", num);
-
+    console.log("PAG onclickbutton => navigate(num)", num);
     navigate(`?page=${num}`);
   };
 
   useEffect(() => {
+    console.log("PAG useEffect:page change callback to parent updated data");
+    callback(page);
+    //updaste data
+  }, [page]);
+  useEffect(() => {
+    console.log("PAG useEffect:searchParams");
     //after render chi tru gia tri cua useState va useRef duoc giu lai
     //con lai tat ca deu use deu tao moi
-    console.log("SOME MAGIC")
+    console.log("SetPage ");
     let newPage = searchParams.get("page");
     if (newPage) {
       setPage(parseInt(newPage));
     }
   }, [searchParams]);
 
-  console.log(searchParams.get("page"));
   return (
     <nav aria-label="Page navigation example">
       {page}
