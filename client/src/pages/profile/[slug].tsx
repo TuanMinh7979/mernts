@@ -15,7 +15,7 @@ const Profile = () => {
   return (
     <div className="row my-3">
       <div className="col-md-5 mb-3">
-        {authState.user?._id === slug ? <UserInfo /> : <OtherInfo />}
+        {authState.user?._id === slug ? <UserInfo /> : <OtherInfo id={""} />}
       </div>
       <div className="col-md-7">
         <h3>

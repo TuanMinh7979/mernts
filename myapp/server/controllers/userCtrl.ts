@@ -41,6 +41,14 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  getUser: async (req: IReqAuth, res: Response) => {
+    try {
+      const user = await User.findById(req.params.id).select("-password");
+      res.json(user);
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default userCtrl;

@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
 
-const OtherInfo = () => {
-  return (
-    <div>OtherInfo</div>
-  )
+interface IProps {
+  id: string;
 }
 
-export default OtherInfo
+const OtherInfo: React.FC<IProps> = ({ id }) => {
+  return (
+    <div>
+      <h2>OtherInfo</h2>
+    </div>
+  );
+};
+
+export default OtherInfo;

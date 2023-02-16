@@ -11,7 +11,7 @@ import {
 import { validateEmail } from "../middleware/valid";
 import sendEmail from "../config/sendMail";
 import { INewUser, IDecodedToken, IUser } from "../config/interface";
-
+const CLIENT_URL = `${process.env.BASE_URL}`;
 const authCtrl = {
   register: async (req: Request, res: Response) => {
     try {
@@ -31,26 +31,23 @@ const authCtrl = {
         account,
         password: passwordHash,
       };
-      //save ngay lap tuc //FAKE
-      const userToSave = new User(newUser);
-      await userToSave.save();
-      //FAKE
-      //active to save
 
-      const active_token = generateActiveToken({
-        newUser,
-      });
 
+      const active_token = generateActiveToken(newUser);
+
+      const url = `${CLIENT_URL}/active/${active_token}`;
+
+      console.log(">>>>>>>>>>>>>>>>>>>", validateEmail(account));
       if (validateEmail(account)) {
-        const url = `${process.env.BASE_URL}/active/${active_token}`;
-        console.log("send mail ...");
-        sendEmail(account, url, "Xac nhan dia chi email");
-        return res.json({ msg: "success! Please check your email" });
+        console.log("sendddddddddddddddddddddMAIL");
+        sendEmail(account, url, "Verify your email address");
+        return res.json({ msg: "Success! Please check your email." });
       }
       console.log("CONSOLE REGISTER ACTIVETOKEN", active_token);
+      console.log(">>>>>>>>>>>>>>>>>>>");
       return res.json({
         status: "OK",
-        msg: "register success",
+        msg: "register success 123232",
         data: newUser,
         active_token,
       });
