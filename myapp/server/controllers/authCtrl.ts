@@ -10,8 +10,17 @@ import {
 } from "../config/generateToken";
 import { validateEmail } from "../middleware/valid";
 import sendEmail from "../config/sendMail";
-import { INewUser, IDecodedToken, IUser } from "../config/interface";
+import {
+  INewUser,
+  IDecodedToken,
+  IUser,
+  IUserParams,
+  IGgPayload,
+} from "../config/interface";
+import { OAuth2Client } from "google-auth-library";
+
 const CLIENT_URL = `${process.env.BASE_URL}`;
+const client = new OAuth2Client(`${process.env.MAIL_CLIENT_ID}`);
 const authCtrl = {
   register: async (req: Request, res: Response) => {
     try {
@@ -32,16 +41,15 @@ const authCtrl = {
         password: passwordHash,
       };
 
-      const active_token = generateActiveToken({newUser});
+      const active_token = generateActiveToken({ newUser });
 
       const url = `${CLIENT_URL}/active/${active_token}`;
-
 
       if (validateEmail(account)) {
         console.log("sendddddddddddddddddddddMAIL");
         sendEmail(account, url, "Verify your email address");
         console.log("CONSOLE REGISTER ACTIVETOKEN", active_token);
-     
+
         return res.json({
           msg: "Success! Please check your email and active account after that",
         });
@@ -105,7 +113,10 @@ const authCtrl = {
         jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
       );
       const { newUser } = decode;
-      console.log( "000",jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`))
+      console.log(
+        "000",
+        jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
+      );
       if (!newUser) return res.status(500).json({ msg: "Authen failed" });
 
       const user = new User(newUser);
@@ -123,10 +134,10 @@ const authCtrl = {
         console.log("ERR WHEN ACTIVE1", err);
         let name = Object.keys(err.errors)[0];
         errMsg = err.errors[`${name}`].message;
-      }else{
+      } else {
         console.log("ERR WHEN ACTIVE2", err);
       }
-     
+
       return res.status(500).json({ msg: errMsg });
     }
   },
@@ -179,6 +190,47 @@ const authCtrl = {
       return res.status(500).json({ msg: err.code });
     }
   },
+
+  googleLogin: async (req: Request, res: Response) => {
+    try {
+      console.log(">>>>>>>>>>>>>>> ", req.body);
+
+      const { id_token } = req.body;
+      const verify = await client.verifyIdToken({
+        idToken: id_token,
+        audience: `${process.env.MAIL_CLIENT_ID}`,
+      });
+
+      const { email, email_verified, name, picture } = <IGgPayload>(
+        verify.getPayload()
+      );
+
+      if (!email_verified)
+        return res.status(500).json({ msg: "Email verification failed." });
+
+      const password = email + "your google secrect password";
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const user = await User.findOne({ account: email });
+
+      //IF USER REGISTERD THI LOGIN LUON 
+      if (user) {
+        loginUser(user, password, res);
+      } else {
+        //KHONG THI DANG KY TAI KHOAN MOI
+        const user = {
+          name,
+          account: email,
+          password: passwordHash,
+          avatar: picture,
+          type: "google",
+        };
+        registerUser(user, res);
+      }
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
@@ -197,4 +249,25 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
     user: { ...user._doc, password: "" },
   });
 };
+
+const registerUser = async (user: IUserParams, res: Response) => {
+  const newUser = new User(user);
+  await newUser.save();
+
+  const access_token = generateAccessToken({ id: newUser._id });
+  const refresh_token = generateRefreshToken({ id: newUser._id });
+
+  res.cookie("refreshtoken", refresh_token, {
+    httpOnly: true,
+    path: `/api/refresh_token`,
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+  });
+
+  res.json({
+    msg: "Login Success!",
+    access_token,
+    user: { ...newUser._doc, password: "" },
+  });
+};
+
 export default authCtrl;

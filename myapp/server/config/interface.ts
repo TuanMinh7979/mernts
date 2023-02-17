@@ -26,3 +26,20 @@ export interface IReqAuth extends Request {
   user?: IUser;
 }
 
+export interface IUserParams {
+  name: string 
+  account: string 
+  password: string
+  avatar?: string
+  type: string
+}
+
+export interface IGgPayload {
+  email: string
+  email_verified: boolean
+  name: string
+  picture: string
+}
+
+
+

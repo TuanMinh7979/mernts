@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { GoogleLogin, GoogleLoginResponse } from "react-google-login-lite";
-const SocialLogin = () => {
+const SocialLogin1 = () => {
 
 
   //or typescript
@@ -27,4 +27,4 @@ const SocialLogin = () => {
   );
 };
 
-export default SocialLogin;
+export default SocialLogin1;
