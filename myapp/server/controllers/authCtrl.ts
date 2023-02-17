@@ -32,19 +32,24 @@ const authCtrl = {
         password: passwordHash,
       };
 
-
-      const active_token = generateActiveToken(newUser);
+      const active_token = generateActiveToken({newUser});
 
       const url = `${CLIENT_URL}/active/${active_token}`;
 
-      console.log(">>>>>>>>>>>>>>>>>>>", validateEmail(account));
+
       if (validateEmail(account)) {
         console.log("sendddddddddddddddddddddMAIL");
         sendEmail(account, url, "Verify your email address");
-        return res.json({ msg: "Success! Please check your email." });
+        console.log("CONSOLE REGISTER ACTIVETOKEN", active_token);
+     
+        return res.json({
+          msg: "Success! Please check your email and active account after that",
+        });
       }
-      console.log("CONSOLE REGISTER ACTIVETOKEN", active_token);
-      console.log(">>>>>>>>>>>>>>>>>>>");
+
+      const newUserToSave = new User(newUser);
+      await newUserToSave.save();
+
       return res.json({
         status: "OK",
         msg: "register success 123232",
@@ -100,6 +105,7 @@ const authCtrl = {
         jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`)
       );
       const { newUser } = decode;
+      console.log( "000",jwt.verify(active_token, `${process.env.ACTIVE_SECRET}`))
       if (!newUser) return res.status(500).json({ msg: "Authen failed" });
 
       const user = new User(newUser);
@@ -111,12 +117,16 @@ const authCtrl = {
         return res.status(500).json({ msg: err.message });
 
       let errMsg = "something wrong";
-      if (err.code === 11000) {
+      if (err && err.code === 11000) {
         errMsg = Object.keys(err.keyValue)[0] + " already exists.";
-      } else {
+      } else if (err && err.errors) {
+        console.log("ERR WHEN ACTIVE1", err);
         let name = Object.keys(err.errors)[0];
         errMsg = err.errors[`${name}`].message;
+      }else{
+        console.log("ERR WHEN ACTIVE2", err);
       }
+     
       return res.status(500).json({ msg: errMsg });
     }
   },
