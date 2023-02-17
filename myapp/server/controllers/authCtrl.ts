@@ -204,6 +204,7 @@ const authCtrl = {
       const { email, email_verified, name, picture } = <IGgPayload>(
         verify.getPayload()
       );
+      console.log( "user info: ", email, email_verified, name, picture)
 
       if (!email_verified)
         return res.status(500).json({ msg: "Email verification failed." });
@@ -215,8 +216,10 @@ const authCtrl = {
 
       //IF USER REGISTERD THI LOGIN LUON 
       if (user) {
-        loginUser(user, password, res);
+        console.log("DANG NHAP NGAY")
+        loginUser(user, password, res)
       } else {
+        console.log("DANG KY TRUOC KHI DANG NHAP")
         //KHONG THI DANG KY TAI KHOAN MOI
         const user = {
           name,
@@ -234,6 +237,7 @@ const authCtrl = {
 };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
+  
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
 

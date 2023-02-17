@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { GoogleLogin, GoogleLoginResponse } from "react-google-login-lite";
+
 const SocialLogin1 = () => {
 
 
@@ -18,7 +19,7 @@ const SocialLogin1 = () => {
   return (
     <>
       <GoogleLogin
-        client_id="1059620408687-o2fo5lukgh82djer8i5ftui2vrd54fsj.apps.googleusercontent.com"
+        client_id=""
         cookiepolicy="single_host_origin"
         onSuccess={onSuccess}
         onFailure={onFailure}

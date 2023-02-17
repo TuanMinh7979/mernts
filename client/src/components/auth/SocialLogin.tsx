@@ -1,27 +1,26 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { GoogleLogin, GoogleLoginResponse } from "react-google-login-lite";
+import { GoogleLogin } from "@react-oauth/google";
+import { gglogin } from "../../redux/actions/authAction";
 const SocialLogin = () => {
-
-
   //or typescript
-  const onSuccess = (googleUser: GoogleLoginResponse) => {
-    alert("sc")
-    console.log(googleUser);
-  };
-
-  const onFailure = (err: any) => {
-    alert("failed...")
-    console.log(err);
+  const dispatch = useDispatch();
+  const myOnSuccess = (credentialResponse: any) => {
+    console.log(credentialResponse);
+    const credential = credentialResponse.credential;
+    console.log("id token ", credential)
+    dispatch(gglogin(credential));
   };
 
   return (
     <>
       <GoogleLogin
-        client_id="1059620408687-o2fo5lukgh82djer8i5ftui2vrd54fsj.apps.googleusercontent.com"
-        cookiepolicy="single_host_origin"
-        onSuccess={onSuccess}
-        onFailure={onFailure}
+        onSuccess={(credentialResponse) => {
+          myOnSuccess(credentialResponse);
+        }}
+        onError={() => {
+          console.log("Login Failed");
+        }}
       />
     </>
   );
