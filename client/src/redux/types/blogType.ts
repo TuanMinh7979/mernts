@@ -2,6 +2,7 @@ import { IBlog } from "../../TypeScript";
 
 export const GET_HOME_BLOGS = "GET_HOME_BLOGS";
 export const GET_BLOGS_BY_CATID = "GET_BLOGS_BY_CATID";
+export const GET_BLOGS_BY_USERID = "GET_BLOGS_BY_USERID";
 
 //for state
 export interface IHomeBlogs {
@@ -21,7 +22,7 @@ export interface IBlogsCategory {
   id: string;
   blogs: IBlog[];
   total: number;
-  search: string
+  search: string;
 }
 //for action type
 export interface IGetBlogsCatType {
@@ -29,3 +30,14 @@ export interface IGetBlogsCatType {
   payload: IBlogsCategory;
 }
 
+export interface IBlogsUser {
+  id: string;
+  blogs: IBlog[];
+  total: number;
+  search: string;
+}
+//for action type
+export interface IGetBlogsUserType {
+  type: typeof GET_BLOGS_BY_USERID;
+  payload: IBlogsUser;
+}

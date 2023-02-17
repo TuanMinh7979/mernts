@@ -7,7 +7,8 @@ const router = express.Router()
 
 router.post('/blog', auth, blogCtrl.createBlog)
 router.get('/home/blogs', blogCtrl.getHomeBlogs)
-router.get('/blogs/:category_id', blogCtrl.getHomeBlogsByCategoryId)
+router.get('/blogs/category/:category_id', blogCtrl.getHomeBlogsByCategoryId)
+router.get('/blogs/user/:user_id', blogCtrl.getBlogsByUser)
 
 
 

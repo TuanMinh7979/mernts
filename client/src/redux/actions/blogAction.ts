@@ -6,8 +6,10 @@ import { ALERT, IAlert, IAlertType } from "../types/alertType";
 
 import {
   GET_BLOGS_BY_CATID,
+  GET_BLOGS_BY_USERID,
   GET_HOME_BLOGS,
   IGetBlogsCatType,
+  IGetBlogsUserType,
   IGetHomeBlogsType,
 } from "../types/blogType";
 export const createBlog =
@@ -50,10 +52,27 @@ export const getBlogByCategoryId =
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       console.log(`CURRENT API EP : blogs/${catId}${searchParams}`);
-      const res = await getAPI(`blogs/${catId}${searchParams}`);
+      const res = await getAPI(`blogs/category/${catId}${searchParams}`);
       dispatch({
         type: GET_BLOGS_BY_CATID,
         payload: { ...res.data, id: catId, searchParams },
+      });
+      dispatch({ type: ALERT, payload: {} });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };
+export const getBlogByUserId =
+  (userId: string, searchParams?: string) =>
+  async (dispatch: Dispatch<IAlertType | IGetBlogsUserType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+      if(!searchParams) searchParams=""
+      const res = await getAPI(`blogs/user/${userId}${searchParams}`);
+      console.log("fetch Data blogUser", res);
+      dispatch({
+        type: GET_BLOGS_BY_USERID,
+        payload: { ...res.data, id: userId },
       });
       dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
