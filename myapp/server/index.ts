@@ -20,6 +20,7 @@ app.use("/api", routes.authRouter);
 app.use("/api", routes.userRouter);
 app.use('/api', routes.categoryRouter);
 app.use('/api', routes.blogRouter);
+app.use('/api', routes.commentRouter);
 import "./config/database";
 const PORT = 5001;
 app.listen(PORT, () => {

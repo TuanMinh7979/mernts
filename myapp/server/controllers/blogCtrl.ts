@@ -201,7 +201,7 @@ const blogCtrl = {
             totalCount: [
               {
                 $match: {
-                  user: new mongoose.Types.ObjectId(req.params.user_id)
+                  user: new mongoose.Types.ObjectId(req.params.user_id),
                 },
               },
               { $count: "count" },
@@ -233,6 +233,22 @@ const blogCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  getBlog: async (req: Request, res: Response) => {
+    try {
+      console.log("here")
+      const blog = await Blogs.findOne({ _id: req.params.id }).populate(
+        "user",
+        "-password"
+      );
+  
+      if (!blog) return res.status(400).json({ msg: "blog not exist" });
+      return res.json(blog);
+    } catch (e:any) {
+      return res.status(500).json({ msg: e.message });
+    }
+  }
 };
+
 
 export default blogCtrl;
