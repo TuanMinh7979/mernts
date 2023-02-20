@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Comments from "../../components/comments";
 import Input from "../../components/comments/Input";
+import { createComment } from "../../redux/actions/commentAction";
 import { IBlog, IComment, IUser, RootStore } from "../../TypeScript";
 
 interface IProps {
@@ -10,10 +11,17 @@ interface IProps {
 }
 
 const DisplayBlog: React.FC<IProps> = ({ blog }) => {
-  const { authState } = useSelector((state: RootStore) => state);
+  const { authState, comments } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
 
   const [showComments, setShowComments] = useState<IComment[]>([]);
+
+  useEffect(() => {
+    if (comments.data.length === 0) return;
+
+    setShowComments(comments.data);
+  }, [comments.data]);
+
   const hdlComment = (body: string) => {
     if (!authState.user || !authState.access_token) return;
     const data: IComment = {
@@ -25,6 +33,8 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
     };
     console.log(showComments);
     setShowComments([...showComments, data]);
+
+    dispatch(createComment(data, authState.access_token));
   };
   return (
     <div>

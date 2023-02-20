@@ -59,7 +59,7 @@ export const refreshToken =
 
       dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
-      // dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
 
