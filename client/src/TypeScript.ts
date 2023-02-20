@@ -49,12 +49,23 @@ export interface ICategory {
 }
 
 export interface IBlog {
-  _id?: string
+  _id?: string;
   user: string | IUser;
   title: string;
   content: string;
   description: string;
   thumbnail: string | File;
   category: string;
+  createdAt: string;
+}
+
+export interface IComment {
+  _id?:string
+  user:IUser;
+  blog_id: string;
+  blog_user_id: string;
+  content: string;
+  replyCM?: IComment[];
+  reply_user?: string;
   createdAt: string;
 }

@@ -36,9 +36,7 @@ const DetailBlog = () => {
 
       {blog && <DisplayBlog blog={blog}></DisplayBlog>}
 
-      <hr />
-      <h3 style={{ color: "#ff7a00" }}>---COMMENT---</h3>
-
+    
       
     </div>
   );
