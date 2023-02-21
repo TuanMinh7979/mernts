@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Loading from "../../components/alert/Loading";
 import Comments from "../../components/comments";
 import Input from "../../components/comments/Input";
+import Pagination from "../../components/global/Pagination";
 import Spinner from "../../components/global/Spinner";
 import { createComment, getComments } from "../../redux/actions/commentAction";
 import { IBlog, IComment, IUser, RootStore } from "../../TypeScript";
@@ -27,9 +28,9 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchComments = useCallback(
-    async (id: string) => {
+    async (id: string, numPage = 1) => {
       setLoading(true);
-      dispatch(getComments(id));
+      dispatch(getComments(id, numPage));
       setLoading(false);
     },
     [dispatch]
@@ -53,6 +54,12 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 
     dispatch(createComment(data, authState.access_token));
   };
+
+  const hdlPagination = (num: number) => {
+    if (!blog._id) return;
+    fetchComments(blog._id, num)
+  };
+
   return (
     <div>
       <h2
@@ -92,10 +99,16 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
       {loading ? (
         <Spinner></Spinner>
       ) : (
-     
         showComments?.map((comment, index) => (
           <Comments key={index} comment={comment}></Comments>
         ))
+      )}
+
+      {comments.total > 0 && (
+        <Pagination
+          total={comments.total}
+          callback={hdlPagination}
+        ></Pagination>
       )}
     </div>
   );

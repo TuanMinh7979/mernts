@@ -67,19 +67,19 @@ export const logout =
   () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
       localStorage.removeItem("logged");
+      dispatch({ type: AUTH, payload: {} });
       await getAPI("logout");
-      window.location.href = "/";
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
 
 //google login
-  export const gglogin =
+export const gglogin =
   (id_token: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
-      const res = await postAPI("google_login", {id_token});
+      const res = await postAPI("google_login", { id_token });
 
       dispatch({
         type: "AUTH",

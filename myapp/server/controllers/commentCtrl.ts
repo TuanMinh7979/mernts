@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const Pagination = (req: IReqAuth) => {
   let page = Number(req.query.page) * 1 || 1;
-  let limit = Number(req.query.limit) * 1 || 4;
+  let limit = Number(req.query.limit) * 1 || 2;
   let skip = (page - 1) * limit;
 
   return { page, limit, skip };
@@ -34,7 +34,7 @@ const commentCtrl = {
   },
   getComments: async (req: Request, res: Response) => {
     const { limit, skip } = Pagination(req);
-
+console.log(limit)
     try {
       const data = await Comments.aggregate([
         {
@@ -50,8 +50,11 @@ const commentCtrl = {
               {
                 $lookup: {
                   from: "users",
-                  localField: "user",
-                  foreignField: "_id",
+                  let: { user_id: "$user" },
+                  pipeline: [
+                    { $match: { $expr: { $eq: ["$_id", "$$user_id"] } } },
+                    { $project: { name: 1, avatar: 1 } },
+                  ],
                   as: "user",
                 },
               },
@@ -65,8 +68,11 @@ const commentCtrl = {
                     {
                       $lookup: {
                         from: "users",
-                        localField: "user",
-                        foreignField: "_id",
+                        let: { user_id: "$user" },
+                        pipeline: [
+                          { $match: { $expr: { $eq: ["$_id", "$$user_id"] } } },
+                          { $project: { name: 1, avatar: 1 } },
+                        ],
                         as: "user",
                       },
                     },
@@ -74,8 +80,11 @@ const commentCtrl = {
                     {
                       $lookup: {
                         from: "users",
-                        localField: "reply_user",
-                        foreignField: "_id",
+                        let: { user_id: "$reply_user" },
+                        pipeline: [
+                          { $match: { $expr: { $eq: ["$_id", "$$user_id"] } } },
+                          { $project: { name: 1, avatar: 1 } },
+                        ],
                         as: "reply_user",
                       },
                     },

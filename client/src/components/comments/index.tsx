@@ -10,7 +10,7 @@ interface IProps {
 }
 const Comments: React.FC<IProps> = ({ comment }) => {
   const [showReply, setShowReply] = useState<IComment[]>([]);
-
+  const [next, setNext] = useState(2);
   useEffect(() => {
     if (!comment.replyCM) return;
     setShowReply(comment.replyCM);
@@ -32,7 +32,7 @@ const Comments: React.FC<IProps> = ({ comment }) => {
         setShowReply={setShowReply}
       >
         {showReply &&
-          showReply.map((el, index) => {
+          showReply.slice(0, next).map((el, index) => {
             console.log("el is ", el);
             return (
               <div
@@ -43,7 +43,6 @@ const Comments: React.FC<IProps> = ({ comment }) => {
               >
                 <AvatarReply
                   user={el.user}
-              
                   reply_user={el.reply_user}
                 ></AvatarReply>
                 <CommentList
@@ -55,6 +54,14 @@ const Comments: React.FC<IProps> = ({ comment }) => {
               </div>
             );
           })}
+
+        <div style={{ cursor: "pointer" }} className="">
+          {showReply.length - next > 0 ? (
+            <small onClick={() => setNext(next + 5)}>See more comment...</small>
+          ) : (
+            <small>Hide comment...</small>
+          )}
+        </div>
       </CommentList>
     </div>
   );
