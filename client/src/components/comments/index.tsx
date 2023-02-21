@@ -32,8 +32,7 @@ const Comments: React.FC<IProps> = ({ comment }) => {
               pointerEvents: comment._id ? "initial" : "none",
             }}
           >
-            
-       
+          
             <AvatarReply
               user={comment.user}
               reply_user={comment.reply_user}
