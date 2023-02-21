@@ -1,11 +1,43 @@
-import React from "react";
-import { IComment } from "../../TypeScript";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { IComment, RootStore } from "../../TypeScript";
+import Input from "./Input";
 
 interface IProps {
   comment: IComment;
+  showReply: IComment[];
+  setShowReply: (showReply: IComment[]) => void;
+  children: any;
 }
 
-const CommentList: React.FC<IProps> = ({ comment }) => {
+const CommentList: React.FC<IProps> = ({
+  children,
+  comment,
+  showReply,
+  setShowReply,
+}) => {
+  const [onReply, setOnReply] = useState(false);
+  const { authState } = useSelector((state: RootStore) => state);
+  const dispatch = useDispatch();
+
+  const hdlReply = (body: string) => {
+    if (!authState.user || !authState.access_token) return;
+    const data = {
+      user: authState.user,
+      blog_id: comment.blog_id,
+      blog_user_id: comment.blog_user_id,
+      content: body,
+      reply_user: comment.user,
+      comment_root: comment._id,
+      createdAt: new Date().toISOString(),
+    };
+    console.log(data);
+    setShowReply([...showReply, data]);
+    setOnReply(false);
+
+   
+  };
+
   return (
     <div className="w-100">
       <div className="comment_box">
@@ -17,11 +49,19 @@ const CommentList: React.FC<IProps> = ({ comment }) => {
         />
 
         <div className="d-flex justify-content-between p-2">
-          <small style={{ cursor: "pointer" }}>- Reply -</small>
+          <small
+            style={{ cursor: "pointer" }}
+            onClick={() => setOnReply(!onReply)}
+          >
+            {onReply ? "-Cancel-" : "- Reply -"}
+          </small>
 
           <small>{comment.createdAt}</small>
         </div>
       </div>
+      {onReply && <Input callback={hdlReply} />}
+
+      {children}
     </div>
   );
 };

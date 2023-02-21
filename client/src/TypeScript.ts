@@ -60,12 +60,13 @@ export interface IBlog {
 }
 
 export interface IComment {
-  _id?:string
-  user:IUser;
+  _id?: string;
+  user: IUser;
   blog_id: string;
   blog_user_id: string;
   content: string;
   replyCM?: IComment[];
-  reply_user?: string;
+  reply_user?: IUser;
+  comment_root?: string;
   createdAt: string;
 }
