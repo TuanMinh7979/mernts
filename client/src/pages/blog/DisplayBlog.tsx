@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Loading from "../../components/alert/Loading";
 import Comments from "../../components/comments";
 import Input from "../../components/comments/Input";
-import { createComment } from "../../redux/actions/commentAction";
+import Spinner from "../../components/global/Spinner";
+import { createComment, getComments } from "../../redux/actions/commentAction";
 import { IBlog, IComment, IUser, RootStore } from "../../TypeScript";
 
 interface IProps {
@@ -21,6 +23,21 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 
     setShowComments(comments.data);
   }, [comments.data]);
+
+  const [loading, setLoading] = useState(false);
+
+  const fetchComments = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      dispatch(getComments(id));
+      setLoading(false);
+    },
+    [dispatch]
+  );
+  useEffect(() => {
+    if (!blog._id) return;
+    fetchComments(blog._id);
+  }, [blog._id, fetchComments]);
 
   const hdlComment = (body: string) => {
     if (!authState.user || !authState.access_token) return;
@@ -72,9 +89,14 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
         </h5>
       )}
 
-      {showComments?.map((comment, index) => (
-        <Comments key={index} comment={comment}></Comments>
-      ))}
+      {loading ? (
+        <Spinner></Spinner>
+      ) : (
+     
+        showComments?.map((comment, index) => (
+          <Comments key={index} comment={comment}></Comments>
+        ))
+      )}
     </div>
   );
 };

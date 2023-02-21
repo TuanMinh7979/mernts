@@ -1,5 +1,6 @@
 import {
   CREATE_COMMENT,
+  GET_COMMENTS,
   ICommentAtType,
   ICommentState,
   ICreateCommentType,
@@ -19,6 +20,8 @@ const commentReducer = (
         ...state,
         data: [...state.data, action.payload],
       };
+    case GET_COMMENTS:
+      return action.payload
 
     default:
       return state;
