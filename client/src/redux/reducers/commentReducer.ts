@@ -4,6 +4,7 @@ import {
   ICommentAtType,
   ICommentState,
   ICreateCommentType,
+  REPLY_COMMENT,
 } from "../types/commentType";
 
 const initState = {
@@ -21,7 +22,19 @@ const commentReducer = (
         data: [...state.data, action.payload],
       };
     case GET_COMMENTS:
-      return action.payload
+      return action.payload;
+    case REPLY_COMMENT:
+      return {
+        ...state,
+        data: state.data.map((item) =>
+          item._id === action.payload.comment_root
+            ? {
+                ...item,
+                replyCM: [...(item.replyCM as []), action.payload],
+              }
+            : item
+        ),
+      };
 
     default:
       return state;

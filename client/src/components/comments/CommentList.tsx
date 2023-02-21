@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { replyComment } from "../../redux/actions/commentAction";
 import { IComment, RootStore } from "../../TypeScript";
 import Input from "./Input";
 
@@ -28,14 +29,14 @@ const CommentList: React.FC<IProps> = ({
       blog_user_id: comment.blog_user_id,
       content: body,
       reply_user: comment.user,
-      comment_root: comment._id,
+      comment_root: comment.comment_root || comment._id,
       createdAt: new Date().toISOString(),
     };
     console.log(data);
     setShowReply([...showReply, data]);
-    setOnReply(false);
 
-   
+    dispatch(replyComment(data, authState.access_token));
+    setOnReply(false);
   };
 
   return (

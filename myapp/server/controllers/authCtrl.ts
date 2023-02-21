@@ -179,10 +179,9 @@ const authCtrl = {
   },
   logout: async (req: Request, res: Response) => {
     try {
-      res.clearCookie("refreshtoken");
+      res.clearCookie('refreshtoken', { path: `/api/refresh_token` })
       console.log(res.cookie);
-      //react app will remove :
-      // localStorage.removeItem("logged");
+
       return res.json({ msg: " logged out" });
     } catch (err: any) {
       if (err instanceof Error)
@@ -243,15 +242,17 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
 
   const access_token = generateAccessToken({ id: user._id });
   const refresh_token = generateRefreshToken({ id: user._id });
-  res.cookie("refreshtoken", refresh_token, {
+  res.cookie('refreshtoken', refresh_token, {
     httpOnly: true,
-  });
+    path: `/api/refresh_token`,
+    maxAge: 30*24*60*60*1000 // 30days
+  })
 
   res.json({
-    msg: "login success server msg",
+    msg: 'Login Success!',
     access_token,
-    user: { ...user._doc, password: "" },
-  });
+    user: { ...user._doc, password: '' }
+  })
 };
 
 const registerUser = async (user: IUserParams, res: Response) => {

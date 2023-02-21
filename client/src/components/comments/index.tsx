@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IComment } from "../../TypeScript";
 import AvatarComment from "./AvatarComment";
 import AvatarReply from "./AvatarReply";
@@ -11,6 +11,12 @@ interface IProps {
 const Comments: React.FC<IProps> = ({ comment }) => {
   const [showReply, setShowReply] = useState<IComment[]>([]);
 
+  useEffect(() => {
+    if (!comment.replyCM) return;
+    setShowReply(comment.replyCM);
+  }, [comment.replyCM]);
+
+  console.log("---------", comment.user);
   return (
     <div
       className="my-3 d-flex"
@@ -19,32 +25,36 @@ const Comments: React.FC<IProps> = ({ comment }) => {
         pointerEvents: comment._id ? "initial" : "none",
       }}
     >
-      {comment.user && <AvatarComment user={comment.user}></AvatarComment>}
+      <AvatarComment user={comment.user}></AvatarComment>
       <CommentList
         comment={comment}
         showReply={showReply}
         setShowReply={setShowReply}
       >
-        {showReply.map((comment, index) => (
-          <div
-            style={{
-              opacity: comment._id ? 1 : 0.5,
-              pointerEvents: comment._id ? "initial" : "none",
-            }}
-          >
-          
-            <AvatarReply
-              user={comment.user}
-              reply_user={comment.reply_user}
-            ></AvatarReply>
-            <CommentList
-              comment={comment}
-              showReply={showReply}
-              setShowReply={setShowReply}
-              children=""
-            />
-          </div>
-        ))}
+        {showReply &&
+          showReply.map((el, index) => {
+            console.log("el is ", el);
+            return (
+              <div
+                style={{
+                  opacity: el._id ? 1 : 0.5,
+                  pointerEvents: el._id ? "initial" : "none",
+                }}
+              >
+                <AvatarReply
+                  user={el.user}
+              
+                  reply_user={el.reply_user}
+                ></AvatarReply>
+                <CommentList
+                  comment={el}
+                  showReply={showReply}
+                  setShowReply={setShowReply}
+                  children=""
+                />
+              </div>
+            );
+          })}
       </CommentList>
     </div>
   );
