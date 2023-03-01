@@ -13,7 +13,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-   //thay vi luu vao store ta se dispatch moi lan ung dung reload
+    //thay vi luu vao store ta se dispatch moi lan ung dung reload
     dispatch(getCates());
     dispatch(getHomeBlogs());
     dispatch(refreshToken());
