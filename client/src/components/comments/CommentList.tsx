@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { replyComment } from "../../redux/actions/commentAction";
+import { replyComment, updateComment } from "../../redux/actions/commentAction";
 import { IComment, RootStore } from "../../TypeScript";
 import Input from "./Input";
 
@@ -55,6 +55,9 @@ const CommentList: React.FC<IProps> = ({
     if (body === edit.content) return setEdit(undefined);
 
     const newComment = { ...edit, content: body };
+    console.log(newComment)
+
+    dispatch(updateComment(newComment,authState.access_token))
     setEdit(undefined)
     console.log(body, edit);
   };
@@ -96,7 +99,7 @@ const CommentList: React.FC<IProps> = ({
                   comment.user._id === authState.user?._id && Nav(comment)
                 )}
               </div>
-              <div className="">{comment.createdAt}</div>
+              <div className="">{new Date(comment.createdAt).toLocaleDateString()}</div>
             </small>
           </div>
         </div>

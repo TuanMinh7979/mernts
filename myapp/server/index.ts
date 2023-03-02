@@ -22,7 +22,7 @@ app.use('/api', routes.categoryRouter);
 app.use('/api', routes.blogRouter);
 app.use('/api', routes.commentRouter);
 import "./config/database";
-const PORT = 5001;
+const PORT = 5002;
 app.listen(PORT, () => {
   console.log("connected.....");
 });

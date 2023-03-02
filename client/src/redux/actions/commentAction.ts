@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { IComment } from "../../TypeScript";
-import { getAPI, postAPI } from "../../utils/FetchData";
+import { getAPI, patchAPI, postAPI } from "../../utils/FetchData";
 import { ALERT, IAlertType } from "../types/alertType";
 import {
   CREATE_COMMENT,
@@ -8,7 +8,10 @@ import {
   ICreateCommentType,
   IGetCommentsType,
   IReplyCommentType,
+  IUpdateCommentType,
   REPLY_COMMENT,
+  UPDATE_COMMENT,
+  UPDATE_REPLYCOMMENT,
 } from "../types/commentType";
 
 export const createComment =
@@ -25,11 +28,26 @@ export const createComment =
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
+export const updateComment =
+  (data: IComment, token: string) =>
+  async (dispatch: Dispatch<IAlertType | IUpdateCommentType>) => {
+    try {
+      dispatch({
+        type: data.comment_root ? UPDATE_REPLYCOMMENT : UPDATE_COMMENT,
+        payload: data,
+      });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };
 export const getComments =
-  (id: string, numPage: number) => async (dispatch: Dispatch<IAlertType | IGetCommentsType>) => {
+  (id: string, numPage: number) =>
+  async (dispatch: Dispatch<IAlertType | IGetCommentsType>) => {
     try {
       let limit = 2;
-      const res = await getAPI(`comments/blog/${id}?limit=${limit}&page=${numPage}`);
+      const res = await getAPI(
+        `comments/blog/${id}?limit=${limit}&page=${numPage}`
+      );
       console.log(res);
 
       dispatch({
