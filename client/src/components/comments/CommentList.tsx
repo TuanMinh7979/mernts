@@ -55,10 +55,10 @@ const CommentList: React.FC<IProps> = ({
     if (body === edit.content) return setEdit(undefined);
 
     const newComment = { ...edit, content: body };
-    console.log(newComment)
+    console.log("new comment ----------", newComment);
 
-    dispatch(updateComment(newComment,authState.access_token))
-    setEdit(undefined)
+    dispatch(updateComment(newComment, authState.access_token));
+    setEdit(undefined);
     console.log(body, edit);
   };
 
@@ -99,7 +99,9 @@ const CommentList: React.FC<IProps> = ({
                   comment.user._id === authState.user?._id && Nav(comment)
                 )}
               </div>
-              <div className="">{new Date(comment.createdAt).toLocaleDateString()}</div>
+              <div className="">
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </div>
             </small>
           </div>
         </div>

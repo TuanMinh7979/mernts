@@ -36,6 +36,12 @@ export const updateComment =
         type: data.comment_root ? UPDATE_REPLYCOMMENT : UPDATE_COMMENT,
         payload: data,
       });
+      const res = await patchAPI(
+        `comments/${data._id}`,
+        { content: data.content },
+        token
+      );
+      console.log(res);
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }

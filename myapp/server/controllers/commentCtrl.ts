@@ -14,7 +14,6 @@ const commentCtrl = {
   createComment: async (req: IReqAuth, res: Response) => {
     if (!req.user)
       return res.status(400).json({ msg: "invalid Authentication." });
-
     try {
       const { content, blog_id, blog_user_id } = req.body;
 
@@ -34,7 +33,7 @@ const commentCtrl = {
   },
   getComments: async (req: Request, res: Response) => {
     const { limit, skip } = Pagination(req);
-console.log(limit)
+    console.log(limit);
     try {
       const data = await Comments.aggregate([
         {
@@ -162,6 +161,31 @@ console.log(limit)
       await newComment.save();
 
       return res.json(newComment);
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  updateComment: async (req: IReqAuth, res: Response) => {
+    console.log(">>>>>>", req.user);
+    if (!req.user)
+      return res.status(400).json({ msg: "invalid Authentication." });
+
+    try {
+      const { content } = req.body;
+
+      const comment = await Comments.findOneAndUpdate(
+        {
+          _id: req.params.id,
+          user: req.user.id,
+        },
+        { content }
+      );
+      console.log("...................", comment);
+
+      if (!comment) {
+        return res.status(400).json({ msg: "Comment does not exist" });
+      }
+      return res.json({ msg: "update success" });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
     }
