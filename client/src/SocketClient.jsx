@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { IComment } from "./TypeScript";
 import { RootStore } from "./TypeScript";
-import { CREATE_COMMENT } from "./redux/types/commentType";
+import { CREATE_COMMENT, REPLY_COMMENT } from "./redux/types/commentType";
 const SocketClient = () => {
   const { socketState } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -20,6 +20,20 @@ const SocketClient = () => {
 
     return () => {
       socketState.off("createComment");
+    };
+  }, [socketState, dispatch]);
+  //reply comment
+  useEffect(() => {
+    if (!socketState) return;
+    socketState.on("replyComment", (data) => {
+      dispatch({
+        type: REPLY_COMMENT,
+        payload: data,
+      });
+    });
+
+    return () => {
+      socketState.off("replyComment");
     };
   }, [socketState, dispatch]);
   return <div>SocketClient</div>;

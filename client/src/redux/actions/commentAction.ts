@@ -94,10 +94,10 @@ export const replyComment =
     try {
       const res = await postAPI("reply_comment", data, token);
 
-      dispatch({
-        type: REPLY_COMMENT,
-        payload: { ...res.data, user: data.user, reply_user: data.reply_user },
-      });
+      // dispatch({
+      //   type: REPLY_COMMENT,
+      //   payload: { ...res.data, user: data.user, reply_user: data.reply_user },
+      // });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }

@@ -157,7 +157,15 @@ const commentCtrl = {
         reply_user: reply_user._id,
       });
 
-      console.log(" new comment reply ", newComment);
+      const data = {
+        ...newComment._doc,
+        user: req.user,
+        reply_user: reply_user,
+        createdAt: new Date().toISOString(),
+      };
+      console.log(data);
+      io.to(`${blog_id}`).emit("replyComment", data);
+  
 
       await Comments.findOneAndUpdate(
         { _id: comment_root },
