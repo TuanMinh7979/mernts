@@ -8,7 +8,7 @@ interface IProps {
 
 }
 const AvatarReply: React.FC<IProps> = (props) => {
-  console.log(props)
+
 
 
   return (

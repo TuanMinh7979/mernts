@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IUser } from "../../TypeScript";
 
-
 interface IProps {
   user: IUser;
 }
 
 const AvatarComment: React.FC<IProps> = ({ user }) => {
+
   return (
     <div className="avatar_comment">
       <img src={user.avatar} alt="avatar" />

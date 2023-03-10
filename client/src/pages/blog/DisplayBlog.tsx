@@ -26,6 +26,7 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
       user: authState.user as IUser,
       blog_id: blog._id as string,
       blog_user_id: (blog.user as IUser)._id,
+      replyCM: [],
       createdAt: new Date().toISOString(),
     };
 
@@ -55,7 +56,6 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
   const [loading, setLoading] = useState(false);
 
   const hdlPagination = (num: number) => {
-
     if (!blog._id) return;
     fetchComments(blog._id, num);
   };

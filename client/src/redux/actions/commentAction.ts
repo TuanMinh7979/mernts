@@ -23,10 +23,11 @@ export const createComment =
     try {
       const res = await postAPI("comment", data, token);
 
-      dispatch({
-        type: CREATE_COMMENT,
-        payload: { ...res.data, user: data.user },
-      });
+
+      // dispatch({
+      //   type: CREATE_COMMENT,
+      //   payload: { ...res.data, user: data.user },
+      // });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
@@ -52,7 +53,6 @@ export const deleteComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteCommentType>) => {
     try {
-   
       dispatch({
         type: data.comment_root ? DELETE_REPLY : DELETE_COMMENT,
         payload: data,

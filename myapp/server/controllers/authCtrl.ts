@@ -179,7 +179,7 @@ const authCtrl = {
   },
   logout: async (req: Request, res: Response) => {
     try {
-      res.clearCookie('refreshtoken', { path: `/api/refresh_token` })
+      res.clearCookie("refreshtoken", { path: `/api/refresh_token` });
       console.log(res.cookie);
 
       return res.json({ msg: " logged out" });
@@ -203,7 +203,7 @@ const authCtrl = {
       const { email, email_verified, name, picture } = <IGgPayload>(
         verify.getPayload()
       );
-      console.log( "user info: ", email, email_verified, name, picture)
+      console.log("user info: ", email, email_verified, name, picture);
 
       if (!email_verified)
         return res.status(500).json({ msg: "Email verification failed." });
@@ -213,12 +213,12 @@ const authCtrl = {
 
       const user = await User.findOne({ account: email });
 
-      //IF USER REGISTERD THI LOGIN LUON 
+      //IF USER REGISTERD THI LOGIN LUON
       if (user) {
-        console.log("DANG NHAP NGAY")
-        loginUser(user, password, res)
+        console.log("DANG NHAP NGAY");
+        loginUser(user, password, res);
       } else {
-        console.log("DANG KY TRUOC KHI DANG NHAP")
+        console.log("DANG KY TRUOC KHI DANG NHAP");
         //KHONG THI DANG KY TAI KHOAN MOI
         const user = {
           name,
@@ -236,23 +236,22 @@ const authCtrl = {
 };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
-  
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
 
   const access_token = generateAccessToken({ id: user._id });
   const refresh_token = generateRefreshToken({ id: user._id });
-  res.cookie('refreshtoken', refresh_token, {
+  res.cookie("refreshtoken", refresh_token, {
     httpOnly: true,
     path: `/api/refresh_token`,
-    maxAge: 30*24*60*60*1000 // 30days
-  })
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+  });
 
   res.json({
-    msg: 'Login Success!',
+    msg: "Login Success!",
     access_token,
-    user: { ...user._doc, password: '' }
-  })
+    user: { ...user._doc, password: "" },
+  });
 };
 
 const registerUser = async (user: IUserParams, res: Response) => {

@@ -12,7 +12,7 @@ const auth = async (req: IReqAuth, res: Response, next: NextFunction) => {
       jwt.verify(token, `${process.env.ACCESS_SECRET}`)
     );
 
-    const user = await userModel.findById(decoded.id);
+    const user = await userModel.findById(decoded.id).select("-password");
     if (!user) return res.status(400).json({ msg: "user dose not exist" });
     req.user = user;
 

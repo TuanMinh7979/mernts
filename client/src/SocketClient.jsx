@@ -1,0 +1,28 @@
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { IComment } from "./TypeScript";
+import { RootStore } from "./TypeScript";
+import { CREATE_COMMENT } from "./redux/types/commentType";
+const SocketClient = () => {
+  const { socketState } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  //Create Comment
+  useEffect(() => {
+    if (!socketState) return;
+    socketState.on("createComment", (data) => {
+      dispatch({
+        type: CREATE_COMMENT,
+        payload: data,
+      });
+    });
+
+    return () => {
+      socketState.off("createComment");
+    };
+  }, [socketState, dispatch]);
+  return <div>SocketClient</div>;
+};
+
+export default SocketClient;

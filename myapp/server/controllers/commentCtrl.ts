@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Comments from "../models/commentModel";
 import { IReqAuth } from "../config/interface";
 import mongoose from "mongoose";
-
+import { io } from "../index";
 const Pagination = (req: IReqAuth) => {
   let page = Number(req.query.page) * 1 || 1;
   let limit = Number(req.query.limit) * 1 || 2;
@@ -23,6 +23,14 @@ const commentCtrl = {
         blog_id,
         blog_user_id,
       });
+
+      const data = {
+        ...newComment._doc,
+        user: req.user,
+        createdAt: new Date().toISOString(),
+      };
+      console.log(data);
+      io.to(`${blog_id}`).emit("createComment", data);
 
       await newComment.save();
 
