@@ -16,7 +16,6 @@ const Comments: React.FC<IProps> = ({ comment }) => {
     setShowReply(comment.replyCM);
   }, [comment.replyCM]);
 
-
   return (
     <div
       className="my-3 d-flex"
@@ -33,7 +32,6 @@ const Comments: React.FC<IProps> = ({ comment }) => {
       >
         {showReply &&
           showReply.slice(0, next).map((el, index) => {
-
             return (
               <div
                 style={{
@@ -59,7 +57,9 @@ const Comments: React.FC<IProps> = ({ comment }) => {
           {showReply.length - next > 0 ? (
             <small onClick={() => setNext(next + 5)}>See more comment...</small>
           ) : (
-            <small>Hide comment...</small>
+            showReply.length > 2 && (
+              <small onClick={() => setNext(2)}>Hide comment...</small>
+            )
           )}
         </div>
       </CommentList>

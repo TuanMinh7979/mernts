@@ -201,13 +201,18 @@ const commentCtrl = {
         $or: [{ user: req.user._id }, { blog_user_id: req.user._id }],
       });
 
-
       if (!comment) {
         return res.status(400).json({ msg: "Comment does not exist" });
       }
 
       if (comment.comment_root) {
-
+        //update array of it's root comment
+        await Comments.findOneAndUpdate(
+          { _id: comment.comment_root },
+          {
+            $pull: { replyCM: comment._id },
+          }
+        );
       } else {
         //delete all reply comment
         await Comments.deleteMany({ _id: { $in: comment.replyCM } });
