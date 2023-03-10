@@ -51,7 +51,6 @@ export const getBlogByCategoryId =
   async (dispatch: Dispatch<IAlertType | IGetBlogsCatType>) => {
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
-      console.log(`CURRENT API EP : blogs/${catId}${searchParams}`);
       const res = await getAPI(`blogs/category/${catId}${searchParams}`);
       dispatch({
         type: GET_BLOGS_BY_CATID,
@@ -69,7 +68,7 @@ export const getBlogByUserId =
       dispatch({ type: ALERT, payload: { loading: true } });
       if(!searchParams) searchParams=""
       const res = await getAPI(`blogs/user/${userId}${searchParams}`);
-      console.log("fetch Data blogUser", res);
+
       dispatch({
         type: GET_BLOGS_BY_USERID,
         payload: { ...res.data, id: userId },

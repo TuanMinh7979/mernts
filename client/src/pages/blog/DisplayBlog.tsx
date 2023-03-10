@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Loading from "../../components/alert/Loading";
 import Comments from "../../components/comments";
 import Input from "../../components/comments/Input";
@@ -14,31 +14,10 @@ interface IProps {
 }
 
 const DisplayBlog: React.FC<IProps> = ({ blog }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { authState, comments } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
-
   const [showComments, setShowComments] = useState<IComment[]>([]);
-
-  useEffect(() => {
-    if (comments.data.length === 0) return;
-
-    setShowComments(comments.data);
-  }, [comments.data]);
-
-  const [loading, setLoading] = useState(false);
-
-  const fetchComments = useCallback(
-    async (id: string, numPage = 1) => {
-      setLoading(true);
-      dispatch(getComments(id, numPage));
-      setLoading(false);
-    },
-    [dispatch]
-  );
-  useEffect(() => {
-    if (!blog._id) return;
-    fetchComments(blog._id);
-  }, [blog._id, fetchComments]);
 
   const hdlComment = (body: string) => {
     if (!authState.user || !authState.access_token) return;
@@ -49,15 +28,36 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
       blog_user_id: (blog.user as IUser)._id,
       createdAt: new Date().toISOString(),
     };
-    console.log(showComments);
-    setShowComments([...showComments, data]);
+
+    setShowComments([data, ...showComments]);
 
     dispatch(createComment(data, authState.access_token));
   };
+  const fetchComments = useCallback(
+    async (id: string, numPage = 1) => {
+      setLoading(true);
+      dispatch(getComments(id, numPage));
+      setLoading(false);
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    setShowComments(comments.data);
+  }, [comments.data]);
+
+  useEffect(() => {
+    if (!blog._id) return;
+    const newPage = searchParams.get("page");
+    fetchComments(blog._id, Number(newPage));
+  }, [blog._id, fetchComments, searchParams]);
+
+  const [loading, setLoading] = useState(false);
 
   const hdlPagination = (num: number) => {
+
     if (!blog._id) return;
-    fetchComments(blog._id, num)
+    fetchComments(blog._id, num);
   };
 
   return (

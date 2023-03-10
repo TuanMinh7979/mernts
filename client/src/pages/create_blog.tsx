@@ -30,12 +30,12 @@ const CreateBlog = () => {
   const { authState, categories } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
 
-  console.log("RENDER ");
+
   useEffect(() => {
     const div = divRef.current;
     if (!div) return; //neu khong return => undefine setBlog(content)=> content.length ERR => blank page
     const text = div?.innerText as string;
-    console.log(text, "INNER TEXT --- BODY", body);
+
     setText(text);
   }, [body]);
   const hdlSubmit = async () => {

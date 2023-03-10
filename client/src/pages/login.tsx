@@ -11,7 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { authState } = useSelector((state: RootStore) => state);
-  console.log(location);
+
   useEffect(() => {
     if (authState.access_token) {
       const searchStr = location.search;

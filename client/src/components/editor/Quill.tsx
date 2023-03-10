@@ -27,7 +27,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    console.log(input);
+
     input.click();
     input.onchange = async () => {
       const files = input.files;
@@ -49,7 +49,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
 
       dispatch({ type: ALERT, payload: { loading: true } });
       const photo = await imageUpload(file);
-      console.log(photo);
+
       const quill = quillRef.current;
 
       const range = quill?.getEditor().getSelection()?.index;
@@ -68,7 +68,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
     toolbar.addHandler("image", hdlChangeImage);
   }, [hdlChangeImage]);
 
-  console.log("compoenent render ");
+
 
   //cis
 

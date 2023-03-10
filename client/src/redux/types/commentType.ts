@@ -1,10 +1,13 @@
+import { IndentStyle } from "typescript";
 import { IComment } from "../../TypeScript";
 
 export const CREATE_COMMENT = "CREATE_COMMENT";
 export const GET_COMMENTS = "GET_COMMENTS";
-export const REPLY_COMMENT="REPLY_COMMENT"
-export const UPDATE_COMMENT="UPDATE_COMMENT"
-export const UPDATE_REPLYCOMMENT="UPDATE_REPLYCOMMENT"
+export const REPLY_COMMENT = "REPLY_COMMENT";
+export const UPDATE_COMMENT = "UPDATE_COMMENT";
+export const UPDATE_REPLYCOMMENT = "UPDATE_REPLYCOMMENT";
+export const DELETE_COMMENT = "DELETE_COMMENT";
+export const DELETE_REPLY = "DELETE_REPLY";
 
 //action type
 export interface ICreateCommentType {
@@ -13,6 +16,11 @@ export interface ICreateCommentType {
 }
 export interface IUpdateCommentType {
   type: typeof UPDATE_COMMENT | typeof UPDATE_REPLYCOMMENT;
+  payload: IComment;
+}
+//for action type
+export interface IDeleteCommentType {
+  type: typeof DELETE_COMMENT | typeof DELETE_REPLY;
   payload: IComment;
 }
 
@@ -30,4 +38,9 @@ export interface ICommentState {
   total: number;
 }
 
-export type  ICommentAtType= ICreateCommentType |IUpdateCommentType| IGetCommentsType | IReplyCommentType
+export type ICommentAtType =
+  | ICreateCommentType
+  | IUpdateCommentType
+  | IGetCommentsType
+  | IReplyCommentType
+  | IDeleteCommentType;

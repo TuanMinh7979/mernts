@@ -8,9 +8,7 @@ import { checkPassword } from "../../utils/Valid";
 export const updateUser =
   (avatar: File, name: string, auth: IAuth) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
-    console.log("avatar is", avatar);
-    console.log("name is", name);
-    console.log("auth is", auth);
+
     if (!auth.access_token || !auth.user) return;
 
     let url = "";
@@ -47,7 +45,7 @@ export const updateUser =
           name: name ? name : auth.user.name,
         },
       };
-      console.log("new Auth State", newAuthState);
+     
       dispatch({
         type: "AUTH",
         payload: newAuthState,

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { replyComment, updateComment } from "../../redux/actions/commentAction";
 import { IComment, RootStore } from "../../TypeScript";
 import Input from "./Input";
-
+import { deleteComment } from "../../redux/actions/commentAction";
 interface IProps {
   comment: IComment;
   showReply: IComment[];
@@ -34,7 +34,7 @@ const CommentList: React.FC<IProps> = ({
       comment_root: comment.comment_root || comment._id,
       createdAt: new Date().toISOString(),
     };
-    console.log(data);
+
     setShowReply([...showReply, data]);
 
     dispatch(replyComment(data, authState.access_token));
@@ -44,8 +44,11 @@ const CommentList: React.FC<IProps> = ({
   const Nav = (comment: IComment) => {
     return (
       <div className="">
-        <i className="fas fa-trash-alt mx2"></i>
-        <i className="fas fa-edit me-2" onClick={() => setEdit(comment)}></i>
+        <i
+          className="fas fa-trash-alt mx-2"
+          onClick={() => hdlDeleteComment(comment)}
+        ></i>
+        <i className="fas fa-edit mx-2" onClick={() => setEdit(comment)}></i>
       </div>
     );
   };
@@ -55,13 +58,15 @@ const CommentList: React.FC<IProps> = ({
     if (body === edit.content) return setEdit(undefined);
 
     const newComment = { ...edit, content: body };
-    console.log("new comment ----------", newComment);
 
     dispatch(updateComment(newComment, authState.access_token));
     setEdit(undefined);
-    console.log(body, edit);
   };
 
+  const hdlDeleteComment = (comment: IComment) => {
+    if (!authState.user || !authState.access_token) return;
+    dispatch(deleteComment(comment, authState.access_token));
+  };
   return (
     <div className="w-100">
       {edit ? (
@@ -93,7 +98,8 @@ const CommentList: React.FC<IProps> = ({
                   comment.user._id === authState.user._id ? (
                     Nav(comment)
                   ) : (
-                    <i className="fas fa-trash-alt mx2"></i>
+                    // <i className="fas fa-trash-alt mx-2"></i>
+                    <></>
                   )
                 ) : (
                   comment.user._id === authState.user?._id && Nav(comment)

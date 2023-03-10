@@ -34,12 +34,12 @@ const UserInfo = () => {
   const hdlSubmit = (e: FormSubmit) => {
     e.preventDefault();
     if (avatar || name) {
-      console.log("USERINFO PAGE dispatch updateuser");
+
       dispatch(updateUser(avatar as File, name, authState));
     }
 
     if (password && authState.access_token) {
-      console.log("USERINFO PAGE dispatch resetPassword");
+
 
       dispatch(resetPassword(password, cf_password, authState.access_token));
     }

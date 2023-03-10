@@ -12,16 +12,16 @@ const Active = () => {
     if (slug) {
       postAPI("active", { active_token: slug })
         .then((res) => {
-          console.log("thanhncong");
+     
           setSuccessMsg("thanh cong");
         })
         .catch((err) => {
-          console.log("failed", err);
+
           setErrMsg(err.response.data.msg);
         });
     }
   }, [slug]);
-  console.log("RENDER now");
+
   return (
     <>
       <div>

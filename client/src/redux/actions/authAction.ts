@@ -47,11 +47,11 @@ export const refreshToken =
     //if not logged return
 
     if (!logged) {
-      console.log("not logged return");
+
       return;
     }
     //if login get new token
-    console.log("logged=> get token ");
+ 
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await getAPI("refresh_token");

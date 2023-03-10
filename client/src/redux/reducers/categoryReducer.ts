@@ -14,7 +14,6 @@ const categoryReducer = (
     case CREATE_CATE:
       return [...state, action.payload];
     case GET_CATES:
-      console.log("action get cate running...");
       return action.payload;
     case UPDATE_CATE:
       return state.map((item) => {

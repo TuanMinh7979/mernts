@@ -1,5 +1,7 @@
 import {
   CREATE_COMMENT,
+  DELETE_COMMENT,
+  DELETE_REPLY,
   GET_COMMENTS,
   ICommentAtType,
   ICommentState,
@@ -21,7 +23,7 @@ const commentReducer = (
     case CREATE_COMMENT:
       return {
         ...state,
-        data: [...state.data, action.payload],
+        data: [action.payload, ...state.data],
       };
     case GET_COMMENTS:
       return action.payload;
@@ -32,7 +34,7 @@ const commentReducer = (
           item._id === action.payload.comment_root
             ? {
                 ...item,
-                replyCM: [...(item.replyCM as []), action.payload],
+                replyCM: [action.payload, ...(item.replyCM as [])],
               }
             : item
         ),
@@ -42,6 +44,26 @@ const commentReducer = (
         ...state,
         data: state.data.map((item) =>
           item._id === action.payload._id ? action.payload : item
+        ),
+      };
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        data: state.data.filter((item) => item._id !== action.payload._id),
+      };
+    case DELETE_REPLY:
+
+      return {
+        ...state,
+        data: state.data.map((item) =>
+          item._id === action.payload.comment_root
+            ? {
+                ...item,
+                replyCM: item.replyCM?.filter(
+                  (rp) => rp._id !== action.payload._id
+                ),
+              }
+            : item
         ),
       };
     case UPDATE_REPLYCOMMENT:

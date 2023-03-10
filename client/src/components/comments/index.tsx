@@ -16,7 +16,7 @@ const Comments: React.FC<IProps> = ({ comment }) => {
     setShowReply(comment.replyCM);
   }, [comment.replyCM]);
 
-  console.log("---------", comment.user);
+
   return (
     <div
       className="my-3 d-flex"
@@ -33,7 +33,7 @@ const Comments: React.FC<IProps> = ({ comment }) => {
       >
         {showReply &&
           showReply.slice(0, next).map((el, index) => {
-            console.log("el is ", el);
+
             return (
               <div
                 style={{

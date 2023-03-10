@@ -190,6 +190,33 @@ const commentCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  deleteComment: async (req: IReqAuth, res: Response) => {
+    console.log("comemnt delete ctrl");
+    if (!req.user)
+      return res.status(400).json({ msg: "invalid Authentication." });
+
+    try {
+      const comment = await Comments.findOneAndDelete({
+        _id: req.params.id,
+        $or: [{ user: req.user._id }, { blog_user_id: req.user._id }],
+      });
+
+
+      if (!comment) {
+        return res.status(400).json({ msg: "Comment does not exist" });
+      }
+
+      if (comment.comment_root) {
+
+      } else {
+        //delete all reply comment
+        await Comments.deleteMany({ _id: { $in: comment.replyCM } });
+      }
+      return res.json({ msg: "delete success" });
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default commentCtrl;
