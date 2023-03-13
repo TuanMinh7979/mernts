@@ -23,7 +23,6 @@ export const createComment =
     try {
       const res = await postAPI("comment", data, token);
 
-
       // dispatch({
       //   type: CREATE_COMMENT,
       //   payload: { ...res.data, user: data.user },
@@ -36,15 +35,11 @@ export const updateComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IUpdateCommentType>) => {
     try {
-      dispatch({
-        type: data.comment_root ? UPDATE_REPLYCOMMENT : UPDATE_COMMENT,
-        payload: data,
-      });
-      const res = await patchAPI(
-        `comments/${data._id}`,
-        { content: data.content },
-        token
-      );
+      // dispatch({
+      //   type: data.comment_root ? UPDATE_REPLYCOMMENT : UPDATE_COMMENT,
+      //   payload: data,
+      // });
+      const res = await patchAPI(`comments/${data._id}`, { data }, token);
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
@@ -53,10 +48,10 @@ export const deleteComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteCommentType>) => {
     try {
-      dispatch({
-        type: data.comment_root ? DELETE_REPLY : DELETE_COMMENT,
-        payload: data,
-      });
+      // dispatch({
+      //   type: data.comment_root ? DELETE_REPLY : DELETE_COMMENT,
+      //   payload: data,
+      // });
 
       await deleteAPI(
         `comments/${data._id}`,

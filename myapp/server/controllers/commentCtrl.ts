@@ -165,7 +165,6 @@ const commentCtrl = {
       };
       console.log(data);
       io.to(`${blog_id}`).emit("replyComment", data);
-  
 
       await Comments.findOneAndUpdate(
         { _id: comment_root },
@@ -187,20 +186,21 @@ const commentCtrl = {
       return res.status(400).json({ msg: "invalid Authentication." });
 
     try {
-      const { content } = req.body;
+      const { data } = req.body;
 
       const comment = await Comments.findOneAndUpdate(
         {
           _id: req.params.id,
           user: req.user.id,
         },
-        { content }
+        { content: data.content }
       );
       console.log("...................", comment);
 
       if (!comment) {
         return res.status(400).json({ msg: "Comment does not exist" });
       }
+      io.to(`${data.blog_id}`).emit("updateComment", data);
       return res.json({ msg: "update success" });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
@@ -233,6 +233,8 @@ const commentCtrl = {
         //delete all reply comment
         await Comments.deleteMany({ _id: { $in: comment.replyCM } });
       }
+
+      io.to(`${comment.blog_id}`).emit("deleteComment", comment);
       return res.json({ msg: "delete success" });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
