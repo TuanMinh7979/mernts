@@ -3,6 +3,8 @@ import { IBlog } from "../../TypeScript";
 export const GET_HOME_BLOGS = "GET_HOME_BLOGS";
 export const GET_BLOGS_BY_CATID = "GET_BLOGS_BY_CATID";
 export const GET_BLOGS_BY_USERID = "GET_BLOGS_BY_USERID";
+export const CREATE_BLOGS_USER_ID = "CREATE_BLOGS_USER_ID";
+export const DELETE_BLOGS_USER_ID = "DELETE_BLOGS_USER_ID";
 
 //for state
 export interface IHomeBlogs {
@@ -41,3 +43,16 @@ export interface IGetBlogsUserType {
   type: typeof GET_BLOGS_BY_USERID;
   payload: IBlogsUser;
 }
+export interface ICreateBlogsUserType {
+  type: typeof CREATE_BLOGS_USER_ID;
+  payload: IBlog;
+}
+export interface IDeleteBlogsUserType {
+  type: typeof DELETE_BLOGS_USER_ID;
+  payload: IBlog;
+}
+
+export type IBlogUserType =
+  | IGetBlogsUserType
+  | ICreateBlogsUserType
+  | IDeleteBlogsUserType;

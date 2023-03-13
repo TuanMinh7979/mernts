@@ -10,7 +10,6 @@ import OtherInfo from "../../components/profile/OtherInfo";
 const Profile = () => {
   const { authState } = useSelector((state: RootStore) => state);
   const { slug } = useParams();
- 
 
   return (
     <div className="row my-3">

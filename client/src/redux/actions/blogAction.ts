@@ -1,6 +1,12 @@
 import { Dispatch } from "redux";
 import { IBlog } from "../../TypeScript";
-import { getAPI, patchAPI, postAPI, putAPI } from "../../utils/FetchData";
+import {
+  deleteAPI,
+  getAPI,
+  patchAPI,
+  postAPI,
+  putAPI,
+} from "../../utils/FetchData";
 import { imageUpload } from "../../utils/ImageUpload";
 import { ALERT, IAlert, IAlertType } from "../types/alertType";
 
@@ -8,12 +14,17 @@ import {
   GET_BLOGS_BY_CATID,
   GET_BLOGS_BY_USERID,
   GET_HOME_BLOGS,
+  ICreateBlogsUserType,
   IGetBlogsCatType,
   IGetBlogsUserType,
   IGetHomeBlogsType,
+  CREATE_BLOGS_USER_ID,
+  IDeleteBlogsUserType,
+  DELETE_BLOGS_USER_ID,
 } from "../types/blogType";
 export const createBlog =
-  (blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
+  (blog: IBlog, token: string) =>
+  async (dispatch: Dispatch<IAlertType | ICreateBlogsUserType>) => {
     let url;
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
@@ -28,7 +39,11 @@ export const createBlog =
       const newBlog = { ...blog, thumbnail: url };
 
       const res = await postAPI("blog", newBlog, token);
-
+      console.log("from server", res);
+      dispatch({
+        type: CREATE_BLOGS_USER_ID,
+        payload: res.data,
+      });
       dispatch({ type: ALERT, payload: { loading: false } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
@@ -96,6 +111,24 @@ export const updateBlog =
 
       const res = await putAPI(`blog/${newBlog._id}`, newBlog, token);
       console.log(res);
+      dispatch({ type: ALERT, payload: { success: res.data.msg } });
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };
+export const deleteBlog =
+  (blog: IBlog, token: string) =>
+  async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
+    let url;
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+
+      const res = await deleteAPI(`blog/${blog._id}`, token);
+
+      dispatch({
+        type: DELETE_BLOGS_USER_ID,
+        payload: blog,
+      });
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });

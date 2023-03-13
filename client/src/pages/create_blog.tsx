@@ -48,10 +48,19 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
       })
       .catch((err) => console.log(err));
 
+    const initData = {
+      user: "",
+      title: "",
+      content: "",
+      description: "",
+      thumbnail: "",
+      category: "",
+      createdAt: new Date().toISOString(),
+    };
     return () => {
-      setBlog(initState);
+      setBlog(initData);
       setBody("");
-      setOldData(initState);
+      setOldData(initData);
     };
   }, [id]);
 
@@ -99,7 +108,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
       id = "63f2e58d39b23235f49711e7";
     }
   };
-  console.log("CREATEBLOG", blog);
+
   return (
     <div className="my-4 create_blog">
       <div className="row mt-4">

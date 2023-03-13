@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { IBlog, IUser } from "../../TypeScript";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootStore } from "../../TypeScript";
+import { deleteBlog } from "../../redux/actions/blogAction";
 interface IProps {
   blog: IBlog;
 }
@@ -11,7 +12,13 @@ interface IProps {
 const CardHoriz: React.FC<IProps> = ({ blog }) => {
   const { slug } = useParams();
   const { authState } = useSelector((state: RootStore) => state);
-
+  const dispatch = useDispatch();
+  const hdlDel = () => {
+    if (!authState.user || !authState.access_token) return;
+    if (window.confirm("Do you want to delete this post")) {
+      dispatch(deleteBlog(blog, authState.access_token));
+    }
+  };
   return (
     <div className="card mb-3" style={{ minWidth: "280px" }}>
       <div className="row g-0 p-2">
@@ -51,17 +58,23 @@ const CardHoriz: React.FC<IProps> = ({ blog }) => {
             <h5 className="card-title">{blog.title}</h5>
             <p className="card-text">{blog.description}</p>
             {blog.title && (
-              <p className="card-text d-flex justify-content-between">
+              <div className="card-text d-flex justify-content-between align-items-center">
                 {slug && (blog.user as IUser)._id === authState.user?._id && (
-                  <small>
-                    <Link to={`/update_blog/${blog._id}`}>Update</Link>
-                  </small>
+                  <div style={{ cursor: "pointer" }}>
+                    <Link to={`/update_blog/${blog._id}`}>
+                      <i className="fas fa-edit" />
+                    </Link>
+                    <i
+                      className="fas fa-trash text-danger mx-3"
+                      onClick={hdlDel}
+                    ></i>
+                  </div>
                 )}
 
                 <small className="text-muted">
                   {new Date(blog.createdAt).toLocaleString()}
                 </small>
-              </p>
+              </div>
             )}
 
             {/* <p className="card-text d-flex justify-content-between">
