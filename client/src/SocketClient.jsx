@@ -71,7 +71,7 @@ const SocketClient = () => {
       socketState.off("deleteComment");
     };
   }, [socketState, dispatch]);
-  return <div>SocketClient</div>;
+  return <div></div>;
 };
 
 export default SocketClient;

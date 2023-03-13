@@ -12,8 +12,9 @@ import { ALERT } from "../../redux/types/alertType";
 import { checkImage, imageUpload } from "../../utils/ImageUpload";
 interface IProps {
   setBody: (value: string) => void;
+  body?: string;
 }
-const Quill: React.FC<IProps> = ({ setBody }) => {
+const Quill: React.FC<IProps> = ({ setBody, body }) => {
   const dispatch = useDispatch();
   const modules = { toolbar: { container } };
   const quillRef = useRef<ReactQuill>(null);
@@ -68,8 +69,6 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
     toolbar.addHandler("image", hdlChangeImage);
   }, [hdlChangeImage]);
 
-
-
   //cis
 
   return (
@@ -80,6 +79,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
         placeholder="something..."
         ref={quillRef}
         onChange={(e) => hdlChange(e)}
+        value={body}
       ></ReactQuill>
     </div>
   );

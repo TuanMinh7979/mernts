@@ -236,19 +236,37 @@ const blogCtrl = {
 
   getBlog: async (req: Request, res: Response) => {
     try {
-      console.log("here")
+      console.log("here");
       const blog = await Blogs.findOne({ _id: req.params.id }).populate(
         "user",
         "-password"
       );
-  
+
       if (!blog) return res.status(400).json({ msg: "blog not exist" });
       return res.json(blog);
-    } catch (e:any) {
+    } catch (e: any) {
       return res.status(500).json({ msg: e.message });
     }
-  }
-};
+  },
+  updateBlog: async (req: IReqAuth, res: Response) => {
+    if (!req.user)
+      return res.status(400).json({ msg: "Invalid Authentication." });
 
+    try {
+      const blog = await Blogs.findOneAndUpdate(
+        {
+          _id: req.params.id,
+          user: req.user._id,
+        },
+        req.body
+      );
+
+      if (!blog) return res.status(400).json({ msg: "Invalid Authentication." });
+      res.json({ msg: "Update success" });
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+};
 
 export default blogCtrl;
