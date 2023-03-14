@@ -9,7 +9,7 @@ import {
 } from "../../utils/FetchData";
 import { imageUpload } from "../../utils/ImageUpload";
 import { ALERT, IAlert, IAlertType } from "../types/alertType";
-
+import { checkTokenExp } from "../../utils/checkTokenExp";
 import {
   GET_BLOGS_BY_CATID,
   GET_BLOGS_BY_USERID,
@@ -25,6 +25,8 @@ import {
 export const createBlog =
   (blog: IBlog, token: string) =>
   async (dispatch: Dispatch<IAlertType | ICreateBlogsUserType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     let url;
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
@@ -96,6 +98,8 @@ export const getBlogByUserId =
 
 export const updateBlog =
   (blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     let url;
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
@@ -119,6 +123,8 @@ export const updateBlog =
 export const deleteBlog =
   (blog: IBlog, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     let url;
     try {
       dispatch({ type: ALERT, payload: { loading: true } });

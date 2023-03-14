@@ -16,10 +16,12 @@ import {
   DELETE_REPLY,
   IDeleteCommentType,
 } from "../types/commentType";
-
+import { checkTokenExp } from "../../utils/checkTokenExp";
 export const createComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | ICreateCommentType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     try {
       const res = await postAPI("comment", data, token);
 
@@ -34,6 +36,8 @@ export const createComment =
 export const updateComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IUpdateCommentType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     try {
       // dispatch({
       //   type: data.comment_root ? UPDATE_REPLYCOMMENT : UPDATE_COMMENT,
@@ -47,6 +51,8 @@ export const updateComment =
 export const deleteComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteCommentType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     try {
       // dispatch({
       //   type: data.comment_root ? DELETE_REPLY : DELETE_COMMENT,
@@ -86,6 +92,8 @@ export const getComments =
 export const replyComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IReplyCommentType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) token = checkTokenRs;
     try {
       const res = await postAPI("reply_comment", data, token);
 

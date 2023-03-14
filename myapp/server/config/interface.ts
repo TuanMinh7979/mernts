@@ -20,6 +20,7 @@ export interface IUser extends Document {
   avatar: string;
   role: string;
   type: string;
+  rf_token?: string;
   _doc: object;
 }
 export interface IReqAuth extends Request {
@@ -57,5 +58,6 @@ export interface IBlog extends Document {
   description: string;
   thumbnail: string;
   category: string;
+
   _doc: object;
 }

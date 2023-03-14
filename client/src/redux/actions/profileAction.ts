@@ -5,13 +5,21 @@ import { IAuth, IAuthType, AUTH } from "../types/authType";
 import { checkImage, imageUpload } from "../../utils/ImageUpload";
 import { patchAPI } from "../../utils/FetchData";
 import { checkPassword } from "../../utils/Valid";
+
+import { checkTokenExp } from "../../utils/checkTokenExp";
 export const updateUser =
   (avatar: File, name: string, auth: IAuth) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
+    let token = auth.access_token;
+    if (!token || !auth.user) return;
 
-    if (!auth.access_token || !auth.user) return;
+    const checkTokenRs = await checkTokenExp(token, dispatch);
 
+    if (checkTokenRs) {
+      token = checkTokenRs;
+    }
     let url = "";
+
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       if (avatar) {
@@ -27,25 +35,21 @@ export const updateUser =
       if (!url) {
         url = auth.user.avatar;
       }
-      const res = await patchAPI(
-        "user",
-        { avatar: url, name },
-        auth.access_token
-      );
+      const res = await patchAPI("user", { avatar: url, name }, token);
 
       //update current profile page -> after that use refresh token
       //refreshtoken call after nhan reload button
 
       //nen can dispatch ngay do chuyen trang thi k refresh token
       const newAuthState = {
-        access_token: auth.access_token,
+        access_token: token,
         user: {
           ...auth.user,
           avatar: url ? url : (auth.user.avatar as string),
           name: name ? name : auth.user.name,
         },
       };
-     
+
       dispatch({
         type: "AUTH",
         payload: newAuthState,
@@ -60,6 +64,10 @@ export const updateUser =
 export const resetPassword =
   (password: string, cf_password: string, token: string) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
+    const checkTokenRs = await checkTokenExp(token, dispatch);
+    if (checkTokenRs) {
+      token = checkTokenRs;
+    }
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const msg = checkPassword(password, cf_password);

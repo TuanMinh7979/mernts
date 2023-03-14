@@ -42,7 +42,7 @@ const Category = () => {
     if (!authState.access_token) return;
     dispatch(deteteCategory(id, authState.access_token));
   };
-  if (authState.user?.role !== "admin") return <NotFound />;
+  // if (authState.user?.role !== "admin") return <NotFound />;
   return (
     <div className="category">
       <form onSubmit={handleSubmit}>

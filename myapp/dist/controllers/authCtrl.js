@@ -174,6 +174,8 @@ const loginUser = (user, password, res) => __awaiter(void 0, void 0, void 0, fun
     res.cookie("refreshtoken", refresh_token, {
         httpOnly: true,
     });
+
+
     res.json({
         msg: "login success server msg",
         access_token,

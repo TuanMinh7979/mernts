@@ -32,9 +32,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+
+    rf_token: { type: String, select: false },
   },
   {
     timestamps: true,
   }
 );
-export default mongoose.model<IUser>('user', userSchema)
+export default mongoose.model<IUser>("user", userSchema);

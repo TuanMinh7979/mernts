@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import Categories from "../models/categoryModel";
 import { IReqAuth } from "../config/interface";
-
+import Blog from "../models/blogModel";
 const categoryCtrl = {
   createCategory: async (req: IReqAuth, res: Response) => {
     if (!req.user)
       return res.status(400).json({ msg: "Invalid Authentication." });
 
-    if (req.user.role !== "admin")
-      return res.status(400).json({ msg: "Invalid Authentication." });
+    // if (req.user.role !== "admin")
+    //   return res.status(400).json({ msg: "Invalid Authentication." });
 
     try {
       const name = req.body.name.toLowerCase();
@@ -42,12 +42,12 @@ const categoryCtrl = {
     if (!req.user)
       return res.status(400).json({ msg: "Invalid Authentication." });
 
-    if (req.user.role !== "admin")
-      return res.status(400).json({ msg: "Invalid Authentication." });
+    // if (req.user.role !== "admin")
+    //   return res.status(400).json({ msg: "Invalid Authentication." });
 
     try {
       const category = await Categories.findByIdAndUpdate(req.params.id, {
-        $set: { name: req.body.name.toLowerCase()},
+        $set: { name: req.body.name.toLowerCase() },
       });
 
       res.json({ msg: "Update Success!" });
@@ -59,12 +59,17 @@ const categoryCtrl = {
     if (!req.user)
       return res.status(400).json({ msg: "Invalid Authentication." });
 
-    if (req.user.role !== "admin")
-      return res.status(400).json({ msg: "Invalid Authentication." });
+    // if (req.user.role !== "admin")
+    //   return res.status(400).json({ msg: "Invalid Authentication." });
 
     try {
+      const blogs = await Blog.findOne({ category: req.params.id });
+      if (blogs) {
+        return res.status(400).json({ msg: "Category not empty" });
+      }
       const category = await Categories.findByIdAndDelete(req.params.id);
 
+      if (!category) return res.status(400).json({ msg: "Category not exist" });
       res.json({ msg: "Delete Success!" });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });

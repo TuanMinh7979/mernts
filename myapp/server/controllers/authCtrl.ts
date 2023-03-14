@@ -16,6 +16,7 @@ import {
   IUser,
   IUserParams,
   IGgPayload,
+  IReqAuth,
 } from "../config/interface";
 import { OAuth2Client } from "google-auth-library";
 
@@ -155,32 +156,18 @@ const authCtrl = {
       return res.status(500).json({ msg: err.code });
     }
   },
-  refreshToken: async (req: Request, res: Response) => {
-    //neu da dang nhap thi moi lan truy cap ung dung(dispath reload page lam moi) se co 1 token khac nhau duoc lam moi
-    try {
-      const rf_token = req.cookies.refreshtoken;
-      if (!rf_token)
-        return res.status(400).json({ msg: "Please login before" });
-
-      console.log("------------cookie check", req.cookies);
-      let a = jwt.verify(rf_token, `${process.env.REFRESH_SECRET}`);
-
-      const decoded = <IDecodedToken>a;
-      const user = await User.findById(decoded.id).select("-password");
-      if (!user)
-        return res.status(400).json({ msg: "This account does not exist" });
-      const access_token = generateAccessToken({ id: user._id });
-      res.json({ access_token, user });
-    } catch (err: any) {
-      if (err instanceof Error)
-        return res.status(500).json({ msg: err.message });
-      return res.status(500).json({ msg: err.code });
-    }
-  },
-  logout: async (req: Request, res: Response) => {
+  logout: async (req: IReqAuth, res: Response) => {
+    if (!req.user)
+      return res.status(400).json({ msg: "Invalid authentication" });
     try {
       res.clearCookie("refreshtoken", { path: `/api/refresh_token` });
-      console.log(res.cookie);
+      console.log("COOKIE NOW", res.cookie);
+      await User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          rf_token: "",
+        }
+      );
 
       return res.json({ msg: " logged out" });
     } catch (err: any) {
@@ -192,8 +179,6 @@ const authCtrl = {
 
   googleLogin: async (req: Request, res: Response) => {
     try {
-      console.log(">>>>>>>>>>>>>>> ", req.body);
-
       const { id_token } = req.body;
       const verify = await client.verifyIdToken({
         idToken: id_token,
@@ -227,26 +212,126 @@ const authCtrl = {
           avatar: picture,
           type: "google",
         };
+
         registerUser(user, res);
       }
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  refreshToken: async (req: Request, res: Response) => {
+    console.log(">>>REFRESH CALLL");
+    try {
+      const rf_token = req.cookies.refreshtoken;
+      if (!rf_token)
+        return res
+          .status(400)
+          .json({ msg: "Please login now(dont have token)!" });
+
+      const decoded = <IDecodedToken>(
+        jwt.verify(rf_token, `${process.env.REFRESH_SECRET}`)
+      );
+      if (!decoded.id)
+        return res.status(400).json({ msg: "Please login now!" });
+
+      const user = await User.findById(decoded.id).select(
+        "-password +rf_token"
+      );
+      if (!user)
+        return res.status(400).json({ msg: "This account does not exist." });
+
+      console.log(
+        ">>>",
+        rf_token,
+        "---",
+        user.rf_token,
+        "...=",
+        rf_token === user.rf_token
+      );
+      if (rf_token !== user.rf_token)
+        return res
+          .status(400)
+          .json({ msg: "Please login now(token not valid)!" });
+
+      const access_token = generateAccessToken({ id: user._id });
+      const refresh_token = generateRefreshToken({ id: user._id }, res);
+
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          rf_token: refresh_token,
+        }
+      );
+
+      console.log(">>>REFRESH END");
+      res.json({ access_token, user });
+    } catch (err: any) {
+      console.log("REFRESH ERR", err);
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
+
+// const loginUser = async (user: IUser, password: string, res: Response) => {
+
+//   const isMatch = await bcrypt.compare(password, user.password);
+//   if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
+
+//   const access_token = generateAccessToken({ id: user._id });
+//   const refresh_token = generateRefreshToken({ id: user._id }, res);
+
+//   const newUpdateUser = await User.findOneAndUpdate(
+//     { _id: user._id },
+//     {
+//       $set: {
+//         rf_token: refresh_token,
+//       },
+//     },
+//     { new: true }
+//   );
+
+//   res.cookie("refreshtoken", refresh_token, {
+//     httpOnly: true,
+//     path: `/api/refresh_token`,
+//     maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+//   });
+//   if (newUpdateUser) {
+//     res.json({
+//       msg: "Login Success!",
+//       access_token,
+//       user: { ...newUpdateUser._doc, password: "" },
+//     });
+//   } else {
+//     return res.status(500).json({ msg: "Update failed." });
+//   }
+// };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
+
+  if (!isMatch) {
+    let msgError =
+      user.type === "register"
+        ? "Password is incorrect."
+        : `Password is incorrect. This account login with ${user.type}`;
+
+    return res.status(400).json({ msg: msgError });
+  }
 
   const access_token = generateAccessToken({ id: user._id });
-  const refresh_token = generateRefreshToken({ id: user._id });
-  res.cookie("refreshtoken", refresh_token, {
-    httpOnly: true,
-    path: `/api/refresh_token`,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-  });
+  const refresh_token = generateRefreshToken({ id: user._id }, res);
 
+  await User.findOneAndUpdate(
+    { _id: user._id },
+    {
+      rf_token: refresh_token,
+    }
+  );
+
+  console.log(
+    "_________________________LOGIN SUCCESS___________________________"
+  );
   res.json({
     msg: "Login Success!",
     access_token,
@@ -255,17 +340,14 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
 };
 
 const registerUser = async (user: IUserParams, res: Response) => {
+  //only use for google login
   const newUser = new User(user);
-  await newUser.save();
 
   const access_token = generateAccessToken({ id: newUser._id });
-  const refresh_token = generateRefreshToken({ id: newUser._id });
+  const refresh_token = generateRefreshToken({ id: newUser._id }, res);
 
-  res.cookie("refreshtoken", refresh_token, {
-    httpOnly: true,
-    path: `/api/refresh_token`,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-  });
+  newUser.rf_token = refresh_token;
+  await newUser.save();
 
   res.json({
     msg: "Login Success!",
