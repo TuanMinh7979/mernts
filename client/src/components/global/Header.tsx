@@ -12,7 +12,10 @@ const Header = () => {
     }
   };
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav
+      style={{ position: "sticky", top: 0, left: 0, zIndex: 9 }}
+      className="navbar navbar-expand-lg navbar-light bg-light p-3"
+    >
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           app

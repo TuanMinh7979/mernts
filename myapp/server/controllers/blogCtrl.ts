@@ -289,6 +289,26 @@ const blogCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  searchBlogs: async (req: Request, res: Response) => {
+    console.log("--------", req.query.title);
+    try {
+      const blogs = await Blogs.find({
+        title: {
+          $regex: new RegExp(
+            req.query.title ? (req.query.title as string) : "",
+            "i"
+          ),
+        },
+      })
+        .sort({ createdAt: -1 })
+        .select({ title: 1, description: 1, thumbnail: 1, createdAt: 1 });
+
+      if (!blogs.length) return res.status(400).json({ msg: "No Blogs" });
+      return res.json(blogs);
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default blogCtrl;
