@@ -101,3 +101,18 @@ export const gglogin =
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
+
+export const forgotPassword =
+  (account: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } });
+
+      const res = await postAPI("forgot_password", { account });
+      console.log(res);
+      dispatch({ type: ALERT, payload: { success: "" } });
+
+      localStorage.setItem("logged", "myusername");
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+    }
+  };

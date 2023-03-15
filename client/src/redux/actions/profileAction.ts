@@ -62,9 +62,9 @@ export const updateUser =
   };
 
 export const resetPassword =
-  (password: string, cf_password: string, token: string) =>
+  (password: string, cf_password: string, token?: string) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
-    const checkTokenRs = await checkTokenExp(token, dispatch);
+    const checkTokenRs = await checkTokenExp(token as string, dispatch);
     if (checkTokenRs) {
       token = checkTokenRs;
     }

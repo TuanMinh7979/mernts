@@ -18,6 +18,7 @@ import {
   IGgPayload,
   IReqAuth,
 } from "../config/interface";
+
 import { OAuth2Client } from "google-auth-library";
 
 const CLIENT_URL = `${process.env.BASE_URL}`;
@@ -235,6 +236,7 @@ const authCtrl = {
       if (!decoded.id)
         return res.status(400).json({ msg: "Please login now!" });
 
+      console.log("------------>?>>>>", decoded);
       const user = await User.findById(decoded.id).select(
         "-password +rf_token"
       );
@@ -266,6 +268,38 @@ const authCtrl = {
 
       console.log(">>>REFRESH END");
       res.json({ access_token, user });
+    } catch (err: any) {
+      console.log("REFRESH ERR", err);
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+  forgotPassword: async (req: Request, res: Response) => {
+    console.log(">>>FORGOT PASSWORD");
+    try {
+      const { account } = req.body;
+      const user = await User.findOne({ account });
+      if (!user)
+        return res.status(400).json({ msg: "This account does not exist" });
+
+      console.log("-----", user.type);
+      if (user.type !== "normal")
+        return res
+          .status(400)
+          .json({ msg: "login by google account can not change password" });
+      const access_token = generateAccessToken({ id: user._id });
+      const url = `${CLIENT_URL}/reset_password/${access_token}`;
+      if (validateEmail(account)) {
+        console.log("---------SEND MAIL NOW");
+        sendEmail(account, url, "Forgot password");
+        return res.json({
+          msg: "Sucess! please check your mail to forgot password",
+        });
+      }
+      // else  if (validPhone(account)) {
+      // sendSms(account, url, "Forgot password");
+      //send sms please check your phone number
+      // }
     } catch (err: any) {
       console.log("REFRESH ERR", err);
       return res.status(500).json({ msg: err.message });

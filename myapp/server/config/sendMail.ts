@@ -44,8 +44,7 @@ const sendEmail = async (to: string, url: string, txt: string) => {
       <p>If the button doesn't work for any reason, you can also click on the link below:</p>
   
       <div>${url}</div>
-      </div>
-    `,
+      </div>`,
     };
     const result = await transport.sendMail(mailOption);
     return result;
