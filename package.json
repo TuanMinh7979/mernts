@@ -1,0 +1,38 @@
+{
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js ",
+    "dev": "ts-node-dev server/index.ts | bunyan",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/bunyan": "^1.8.8",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "bunyan": "^1.8.15",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "google-auth-library": "^9.0.0",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^6.11.6",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.8.0",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^18.11.17",
+    "@types/nodemailer": "^6.4.7",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.4"
+  }
+}
