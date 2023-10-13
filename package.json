@@ -2,7 +2,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js ",
-    "dev": "ts-node-dev server/index.ts | bunyan",
+    "dev": "ts-node-dev server/index.ts ",
     "build": "tsc"
   },
   "dependencies": {

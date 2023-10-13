@@ -6,12 +6,12 @@ const router = express.Router();
 
 router
   .route("/category")
-  .get(showRequest(categoryCtrl.getCategories))
+  .get(categoryCtrl.getCategories)
   .post(auth, showRequest(categoryCtrl.createCategory));
 
 router
   .route("/category/:id")
-  .patch(auth, showRequest(categoryCtrl.updateCategory))
-  .delete(auth, showRequest(categoryCtrl.deleteCategory));
+  .patch(auth, categoryCtrl.updateCategory)
+  .delete(auth, categoryCtrl.deleteCategory);
 
 export default router;
