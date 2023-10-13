@@ -16,7 +16,7 @@ const userCtrl = {
         { new: true }
       );
 
-      res.json({ msg: "uptc", savedUser });
+      res.json({ msg: "success", savedUser });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
     }
@@ -36,7 +36,7 @@ const userCtrl = {
         { new: true }
       );
 
-      res.json({ msg: "uptc", savedUser });
+      res.json({ msg: "success", savedUser });
     } catch (err: any) {
       return res.status(500).json({ msg: err.message });
     }
