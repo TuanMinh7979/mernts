@@ -35,5 +35,5 @@ app.use("/api", routes.commentRouter);
 
 const PORT = 5002;
 http.listen(PORT, () => {
-  console.log("connected.....");
+  console.log("connected");
 });

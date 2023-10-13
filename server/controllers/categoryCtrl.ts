@@ -4,11 +4,8 @@ import { IReqAuth } from "../config/interface";
 import Blog from "../models/blogModel";
 const categoryCtrl = {
   createCategory: async (req: IReqAuth, res: Response) => {
-    console.log("__________ createCategory controller");
-
     if (!req.user)
       return res.status(400).json({ msg: "Invalid Authentication." });
-    console.log("__________ createCategory controller OK");
 
     try {
       const name = req.body.name.toLowerCase();

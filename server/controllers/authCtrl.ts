@@ -109,7 +109,7 @@ const authCtrl = {
   },
 
   refreshToken: async (req: Request, res: Response) => {
-    console.log("___REFRESH TOKEN___");
+
     try {
       const rf_token = req.cookies.refreshtoken;
       if (!rf_token)
@@ -135,7 +135,7 @@ const authCtrl = {
         return res.status(400).json({ msg: "This account does not exist." });
 
       if (rf_token !== user.rf_token) {
-        console.log(rf_token, "  vs  ", user.rf_token);
+
         return res
           .status(400)
           .json({ msg: "Please login now(rf token not match with db.token)!" });
