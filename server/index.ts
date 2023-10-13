@@ -16,7 +16,12 @@ import { SocketServer } from "./config/socket";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(
+  cors({
+    origin: `${process.env.BASE_URL}`,
+    credentials: true,
+  })
+);
 app.use(morgan("dev"));
 app.use(cookieParser());
 
@@ -24,7 +29,6 @@ const http = createServer(app);
 export const io = new Server(http);
 io.on("connection", (socket: Socket) => {
   SocketServer(socket);
-  
 });
 
 app.use("/api", routes.authRouter);
