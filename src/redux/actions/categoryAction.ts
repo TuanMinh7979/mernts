@@ -15,17 +15,15 @@ import { logError } from "./actions-utils";
 
 export const getCates = () => async (dispatch: Dispatch<IAlertType>) => {
   try {
-    dispatch({ type: ALERT, payload: { loading: true } });
+    dispatch({ type: ALERT, payload: { loading: true, showSpinner: true } });
     const res = await getAPI("category");
 
     dispatch({ type: GET_CATES, payload: res.data.categories });
-    dispatch({ type: ALERT, payload: { loading: false } });
+    dispatch({ type: ALERT, payload: {} });
   } catch (err: any) {
     logError(err, dispatch);
   }
 };
-
-
 
 export const createCategory =
   (name: string, token: string | undefined) =>
@@ -35,7 +33,7 @@ export const createCategory =
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("category", { name }, access_token);
       dispatch({ type: CREATE_CATE, payload: res.data.newCategory });
-      dispatch({ type: ALERT, payload: { loading: false } });
+      dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
       logError(err, dispatch);
     }
@@ -51,7 +49,7 @@ export const updateCategory =
       const res = await patchAPI(`category/${data._id}`, data, access_token);
 
       dispatch({ type: UPDATE_CATE, payload: data });
-      dispatch({ type: ALERT, payload: { loading: false } });
+      dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
       logError(err, dispatch);
     }
@@ -66,7 +64,7 @@ export const deteteCategory =
       const res = await deleteAPI(`category/${id}`, access_token);
 
       dispatch({ type: DELETE_CATE, payload: id });
-      dispatch({ type: ALERT, payload: { loading: false } });
+      dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
       logError(err, dispatch);
     }

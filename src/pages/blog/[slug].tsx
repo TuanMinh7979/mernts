@@ -41,11 +41,11 @@ const DetailBlog = () => {
   }, [socketState, slug]);
   //Join room
 
-  if (loading) return <Loading></Loading>;
+
   return (
     <div>
       {error && showErrorMsg(error)}
-      <h2>Detail Blog </h2>
+
 
       {blog && <DisplayBlog blog={blog}></DisplayBlog>}
     </div>

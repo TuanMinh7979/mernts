@@ -15,7 +15,6 @@ export const updateUser =
 
     const access_token = await checkTokenExp(token, dispatch);
 
-
     let url = "";
 
     try {
@@ -63,7 +62,7 @@ export const resetPassword =
   (password: string, cf_password: string, token?: string) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
     const access_token = await checkTokenExp(token as string, dispatch);
- 
+
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const msg = checkPassword(password, cf_password);

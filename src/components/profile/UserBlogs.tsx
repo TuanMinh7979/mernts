@@ -6,6 +6,7 @@ import { IBlog, RootStore } from "../../TypeScript";
 import Loading from "../alert/Loading";
 import CardHoriz from "../card/CardHoriz";
 import Pagination from "../global/Pagination";
+import Spinner from "../global/Spinner";
 const UserBlogs = () => {
   const { blogsUser } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const UserBlogs = () => {
     const search = `?page=${num}&limit=5`;
     dispatch(getBlogByUserId(userId as string, search));
   };
-  if (!blogs) return <Loading />;
+  if (!blogs) return <Spinner />;
 
   if (blogs.length === 0) return <h3 className="text-center">No Blogs</h3>;
   return (

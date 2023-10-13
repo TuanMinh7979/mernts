@@ -5,9 +5,9 @@ import {
 } from "../types/blogType";
 
 const homeBlogsReducer = (
-  state: IHomeBlogs[] = [],
+  state: IHomeBlogs[] | null = null,
   action: IGetHomeBlogsType
-): IHomeBlogs[] => {
+): IHomeBlogs[] | null => {
   switch (action.type) {
     case GET_HOME_BLOGS:
       return action.payload;

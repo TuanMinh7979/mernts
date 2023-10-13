@@ -4,8 +4,7 @@ export interface IAlert {
   success?: string | string[];
   error?: string | string[];
   clientErr?: string | string[];
-
-
+  showSpinner?: boolean;
 }
 
 //for type prop of action

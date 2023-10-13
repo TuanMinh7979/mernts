@@ -41,7 +41,7 @@ const Pagination: React.FC<IProps> = ({ total, callback }) => {
 
   return (
     <nav aria-label="Page navigation example">
-      {page}
+
       <ul className="pagination">
         {page > 1 && (
           <li className="page-item" onClick={() => hdlPagination(page - 1)}>

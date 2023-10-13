@@ -61,7 +61,7 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
   };
 
   return (
-    <div>
+    <div className="container-fluid">
       <h2
         className="text-center my-3 text-capitalize fs-1"
         style={{ color: "#ff7a00" }}
@@ -79,14 +79,14 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
         </small>
       </div>
 
-      <div
+      <div className="blog-content"
         dangerouslySetInnerHTML={{
           __html: blog.content,
         }}
       />
       <hr className="my-1" />
 
-      <h3 style={{ color: "#ff7a00" }}>---Comment---</h3>
+      <h3 style={{ color: "#ff7a00" }}>Comment</h3>
 
       {authState.user ? (
         <Input callback={hdlComment} />
@@ -96,13 +96,10 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
         </h5>
       )}
 
-      {loading ? (
-        <Spinner></Spinner>
-      ) : (
+      {!loading &&
         showComments?.map((comment, index) => (
           <Comments key={index} comment={comment}></Comments>
-        ))
-      )}
+        ))}
 
       {comments.total > 0 && (
         <Pagination

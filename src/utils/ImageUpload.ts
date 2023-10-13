@@ -6,7 +6,7 @@ export const checkImage = (file: File) => {
   if (!file) return (err = "File does not exist");
 
   if (file.size > 1024 * 1024) {
-    err = "size mustbe lt 1mb";
+    err = "size must be less than 1mb";
   }
   if (!types.includes(file.type)) err = "wrong format file";
   return err;
@@ -16,10 +16,12 @@ export const imageUpload = async (file: File) => {
   //name
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "ifo999");
-  formData.append("cloud_name", "djnekmzdf");
+  formData.append("upload_preset", "simple");
+  // formData.append("cloud_name", "djnekmzdf");
 
-  const res = await fetch("https://api.cloudinary.com/v1_1/djnekmzdf/upload", {
+
+
+  const res = await fetch(`${process.env.REACT_APP_UPLOAD_LINK}`, {
     method: "POST",
     body: formData,
   });

@@ -16,7 +16,7 @@ const AvatarReply: React.FC<IProps> = (props) => {
       <img src={props.user.avatar} alt="" />
       <div className="ms-1">
         <small className="">
-          Reply to 
+          Reply to &nbsp;
           <Link to={`/profile/${props.reply_user?._id}`}>{props.reply_user?.name}</Link>
         </small>
       </div>

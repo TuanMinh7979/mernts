@@ -108,7 +108,7 @@ const UserInfo = () => {
           <input
             type={typePass ? "text" : "password"}
             className="form-control"
-            value={authState.user.password}
+          
             id="password"
             name="password"
             onChange={hdlChangeInput}
@@ -125,7 +125,7 @@ const UserInfo = () => {
           <input
             type={typeCfPass ? "text" : "password"}
             className="form-control"
-            value={authState.user.password}
+          
             id="cf_password"
             name="cf_password"
             onChange={hdlChangeInput}

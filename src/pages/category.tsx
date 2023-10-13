@@ -24,16 +24,13 @@ const Category = () => {
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
-    console.log("-------------------call");
 
 
     if (edit) {
       if (edit.name === name) return;
       const data = { ...edit, name };
       dispatch(updateCategory(data, authState.access_token));
-    } else {
-      console.log("-------------------call createCategory");
-      
+    } else { 
       dispatch(createCategory(name, authState.access_token));
     }
 

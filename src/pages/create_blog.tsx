@@ -84,7 +84,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
     if (id) {
       const checkEqual = shallowEqual(oldData, newData);
       if (checkEqual) {
-        console.log("EQUAL R");
+      
         return dispatch({
           type: ALERT,
           payload: { error: "The data does not change" },
@@ -98,16 +98,6 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
   };
   if (!authState.access_token) return <NotFound />;
 
-  const toggleIdToCheckCleanUpFunction = () => {
-    //change prop in compoennt in NOT AFFECT and NOT RERENDER
-    if (id === "63f2e58d39b23235f49711e7") {
-      console.log("case1");
-      id = "63c65ec4e7b3a4a33d9e552b";
-    } else {
-      console.log("case2");
-      id = "63f2e58d39b23235f49711e7";
-    }
-  };
 
   return (
     <div className="my-4 create_blog">

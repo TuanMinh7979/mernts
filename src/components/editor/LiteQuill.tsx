@@ -24,7 +24,7 @@ const LiteQuill: React.FC<IProps> = ({ body, setBody }) => {
 
 
   return (
-    <div>
+
       <ReactQuill
         theme="snow"
         modules={modules}
@@ -32,7 +32,7 @@ const LiteQuill: React.FC<IProps> = ({ body, setBody }) => {
         value={body}
         onChange={(e) => hdlChange(e)}
       ></ReactQuill>
-    </div>
+    
   );
 };
 

@@ -20,7 +20,7 @@ const Toast = ({ title, body, bgColor }: IProps) => {
       style={{ top: "5px", right: "5px", zIndex: 50, minWidth: "200px" }}
     >
       <div className="toast-header">
-        <img src="..." className="rounded me-2" alt="..." />
+     
         <strong className="me-auto">{title}</strong>
         <button
           type="button"

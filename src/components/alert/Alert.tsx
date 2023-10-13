@@ -8,17 +8,20 @@ export const Alert = () => {
   //MAGIC HEAR//
   return (
     <div>
-
-      {alertState.loading && <Loading />}
+      {alertState.loading && !alertState.showSpinner && <Loading />}
       {alertState.error && (
         <Toast title="Error" body={alertState.error} bgColor="bg-danger" />
       )}
       {alertState.success && (
         <Toast title="Success" body={alertState.success} bgColor="bg-success" />
       )}
-  
+
       {alertState.clientErr && (
-        <Toast title="CLIENT ERR" body={alertState.clientErr} bgColor="bg-secondary" />
+        <Toast
+          title="CLIENT ERR"
+          body={alertState.clientErr}
+          bgColor="bg-secondary"
+        />
       )}
     </div>
   );

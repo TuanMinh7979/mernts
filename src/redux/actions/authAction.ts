@@ -9,7 +9,7 @@ import { logError } from "./actions-utils";
 export const login =
   (userLogin: any) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
-      dispatch({ type: ALERT, payload: { loading: true } });
+      dispatch({ type: ALERT, payload: { loading: true} });
       const res = await postAPI("login", userLogin);
 
       dispatch({
@@ -55,10 +55,9 @@ export const refreshToken =
     //if login get new token
 
     try {
-      dispatch({ type: ALERT, payload: { loading: true } });
-      const res = await getAPI("refresh_token");
+       const res = await getAPI("refresh_token");
       dispatch({ type: AUTH, payload: res.data });
-      dispatch({ type: ALERT, payload: {} });
+
     } catch (err: any) {
       // logError(err, dispatch);
     }
