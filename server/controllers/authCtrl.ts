@@ -66,13 +66,6 @@ const authCtrl = {
       const access_token = generateAccessToken({ id: user._id });
       const refresh_token = generateRefreshToken({ id: user._id }, res);
 
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          rf_token: refresh_token,
-        }
-      );
-
       res.json({
         msg: "Login Success!",
         access_token,
@@ -89,14 +82,6 @@ const authCtrl = {
       return res.status(400).json({ msg: "Invalid authentication" });
     try {
       res.clearCookie("refreshtoken", { path: `/api/refresh_token` });
-
-      await User.findOneAndUpdate(
-        { _id: req.user._id },
-        {
-          rf_token: "",
-        }
-      );
-
       return res.json({ msg: " logged out" });
     } catch (err: any) {
       if (err instanceof Error)
@@ -116,13 +101,9 @@ const authCtrl = {
           jwt.verify(rf_token, `${process.env.REFRESH_SECRET}`)
         );
       } catch (err: any) {
-        return res
-          .status(500)
-          .json({
-            msg:
-              `refreshToken>verifytoken (over ${process.env.RF_TOKEN_EXP}) ` +
-              err.message,
-          });
+        return res.status(500).json({
+          msg: `refresh new token error (your refreshToken over ${process.env.RF_TOKEN_EXP}), please login again`,
+        });
       }
 
       const user = await User.findById(decoded.id).select("+rf_token");
