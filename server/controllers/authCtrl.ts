@@ -13,8 +13,6 @@ import { IDecodedToken, IUser, IReqAuth } from "../config/interface";
 const authCtrl = {
   registerPro: async (req: Request, res: Response) => {
     try {
-
-      
       const { name, account, password } = req.body;
 
       const user = await User.findOne({ account });
@@ -75,7 +73,6 @@ const authCtrl = {
         }
       );
 
-   
       res.json({
         msg: "Login Success!",
         access_token,
@@ -103,19 +100,16 @@ const authCtrl = {
       return res.json({ msg: " logged out" });
     } catch (err: any) {
       if (err instanceof Error)
-        return res.status(500).json({ msg: "messssssage"+err.message });
+        return res.status(500).json({ msg: "messssssage" + err.message });
       return res.status(500).json({ msg: err.code });
     }
   },
 
   refreshToken: async (req: Request, res: Response) => {
-
     try {
       const rf_token = req.cookies.refreshtoken;
       if (!rf_token)
-        return res
-          .status(400)
-          .json({ msg: "Dont have Refresh token" });
+        return res.status(400).json({ msg: "Dont have Refresh token" });
       let decoded;
       try {
         decoded = <IDecodedToken>(
@@ -124,32 +118,19 @@ const authCtrl = {
       } catch (err: any) {
         return res
           .status(500)
-          .json({ msg: "refreshToken>verifytoken (over 60s) " + err.message });
+          .json({
+            msg:
+              `refreshToken>verifytoken (over ${process.env.RF_TOKEN_EXP}) ` +
+              err.message,
+          });
       }
 
       const user = await User.findById(decoded.id).select("+rf_token");
 
-
-      
       if (!user)
         return res.status(400).json({ msg: "This account does not exist." });
 
-      if (rf_token !== user.rf_token) {
-
-        return res
-          .status(400)
-          .json({ msg: "Please login now(rf token not match with db.token)!" });
-      }
-
       const access_token = generateAccessToken({ id: user._id });
-      const refresh_token = generateRefreshToken({ id: user._id }, res);
-
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          rf_token: refresh_token,
-        }
-      );
 
       res.json({ access_token, user });
     } catch (err: any) {

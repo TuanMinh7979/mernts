@@ -8,6 +8,7 @@ router.post("/test", (req, res) => {
   res.json({ msg: "ok" });
 });
 
+
 router.post("/register", validRegister, authCtrl.registerPro);
 router.post("/login", authCtrl.login);
 router.get("/logout", auth, authCtrl.logout);

@@ -17,9 +17,9 @@ const auth = async (req: IReqAuth, res: Response, next: NextFunction) => {
       decoded = <IDecodedToken>(
         jwt.verify(accessToken, `${process.env.REFRESH_SECRET}`)
       );
+      console.log(">>>>>>>>>>>>>", decoded);
+      
     } catch (err: any) {
-
-
       return res
         .status(500)
         .json({ msg: "Your access token has expired"});

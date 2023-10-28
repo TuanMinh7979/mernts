@@ -37,7 +37,7 @@ app.use("/api", routes.categoryRouter);
 app.use("/api", routes.blogRouter);
 app.use("/api", routes.commentRouter);
 
-const PORT = 5002;
+const PORT = 5000;
 http.listen(PORT, () => {
   console.log("connected");
 });
