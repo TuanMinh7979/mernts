@@ -6,18 +6,18 @@ import { checkImage, imageUpload } from "../../utils/ImageUpload";
 import { patchAPI } from "../../utils/FetchData";
 import { checkPassword } from "../../utils/Valid";
 
-import { checkTokenExp } from "../../utils/checkTokenExp";
+import { checkTokenExp } from "../../utils/TokenUtils";
+import { showError } from "../../utils/TokenUtils";
 export const updateUser =
   (avatar: File, name: string, auth: IAuth) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
     let token = auth.access_token;
     if (!token || !auth.user) return;
 
-    const access_token = await checkTokenExp(token, dispatch);
-
     let url = "";
 
     try {
+      const access_token = await checkTokenExp(token, dispatch);
       dispatch({ type: ALERT, payload: { loading: true } });
       if (avatar) {
         const check = checkImage(avatar);
@@ -54,16 +54,15 @@ export const updateUser =
 
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (e: any) {
-      dispatch({ type: ALERT, payload: { error: e.response.data.msg } });
+      showError(e, dispatch);
     }
   };
 
 export const resetPassword =
   (password: string, cf_password: string, token?: string) =>
   async (dispatch: Dispatch<IAlertType | IAuthType>) => {
-    const access_token = await checkTokenExp(token as string, dispatch);
-
     try {
+      const access_token = await checkTokenExp(token as string, dispatch);
       dispatch({ type: ALERT, payload: { loading: true } });
       const msg = checkPassword(password, cf_password);
       if (msg) return dispatch({ type: ALERT, payload: { error: msg } });
@@ -71,6 +70,6 @@ export const resetPassword =
       const res = await patchAPI("reset_password", { password }, access_token);
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (e: any) {
-      dispatch({ type: ALERT, payload: { error: e.response.data.msg } });
+      showError(e, dispatch);
     }
   };

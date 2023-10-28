@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { IBlog } from "../../TypeScript";
-import { logError } from "./actions-utils";
+import { showError } from "../../utils/TokenUtils";
 import {
   deleteAPI,
   getAPI,
@@ -10,7 +10,7 @@ import {
 } from "../../utils/FetchData";
 import { imageUpload } from "../../utils/ImageUpload";
 import { ALERT, IAlert, IAlertType } from "../types/alertType";
-import { checkTokenExp } from "../../utils/checkTokenExp";
+import { checkTokenExp } from "../../utils/TokenUtils";
 import {
   GET_BLOGS_BY_CATID,
   GET_BLOGS_BY_USERID,
@@ -26,10 +26,11 @@ import {
 export const createBlog =
   (blog: IBlog, token: string) =>
   async (dispatch: Dispatch<IAlertType | ICreateBlogsUserType>) => {
-    const access_token = await checkTokenExp(token, dispatch);
+
 
     let url;
     try {
+      const access_token = await checkTokenExp(token, dispatch);
       dispatch({ type: ALERT, payload: { loading: true } });
 
       if (typeof blog.thumbnail !== "string") {
@@ -47,26 +48,25 @@ export const createBlog =
         type: CREATE_BLOGS_USER_ID,
         payload: res.data,
       });
-      dispatch({ type: ALERT, payload: { success:"Create blog sucesss"} });
+      dispatch({ type: ALERT, payload: { success: "Create blog sucesss" } });
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
 export const getHomeBlogs = () => async (dispatch: Dispatch<IAlertType>) => {
   try {
-    dispatch({ type: ALERT, payload: { loading: true , showSpinner:true} });
+    // dispatch({ type: ALERT, payload: { loading: true, showSpinner: true } });
     const res = await getAPI("home/blogs");
     dispatch({ type: GET_HOME_BLOGS, payload: res.data });
-    dispatch({ type: ALERT, payload: { } });
+    // dispatch({ type: ALERT, payload: {} });
   } catch (err: any) {
-    logError(err, dispatch);
+    // showError(err, dispatch);
   }
 };
 export const getBlogByCategoryId =
   (catId: string, searchParams: string) =>
   async (dispatch: Dispatch<IAlertType | IGetBlogsCatType>) => {
     try {
-
       const res = await getAPI(`blogs/category/${catId}${searchParams}`);
       dispatch({
         type: GET_BLOGS_BY_CATID,
@@ -74,14 +74,13 @@ export const getBlogByCategoryId =
       });
       dispatch({ type: ALERT, payload: {} });
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
 export const getBlogByUserId =
   (userId: string, searchParams?: string) =>
   async (dispatch: Dispatch<IAlertType | IGetBlogsUserType>) => {
     try {
-   
       if (!searchParams) searchParams = "";
       const res = await getAPI(`blogs/user/${userId}${searchParams}`);
 
@@ -89,18 +88,18 @@ export const getBlogByUserId =
         type: GET_BLOGS_BY_USERID,
         payload: { ...res.data, id: userId },
       });
-
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
 
 export const updateBlog =
   (blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
-    const access_token = await checkTokenExp(token, dispatch);
+   
 
     let url;
     try {
+      const access_token = await checkTokenExp(token, dispatch);
       dispatch({ type: ALERT, payload: { loading: true } });
 
       if (typeof blog.thumbnail !== "string") {
@@ -116,16 +115,17 @@ export const updateBlog =
       console.log(res);
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
 export const deleteBlog =
   (blog: IBlog, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
-    const access_token = await checkTokenExp(token, dispatch);
+  
 
     let url;
     try {
+      const access_token = await checkTokenExp(token, dispatch);
       dispatch({ type: ALERT, payload: { loading: true } });
 
       const res = await deleteAPI(`blog/${blog._id}`, access_token);
@@ -136,6 +136,6 @@ export const deleteBlog =
       });
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };

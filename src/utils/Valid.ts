@@ -1,4 +1,4 @@
-import { isTemplateMiddleOrTemplateTail } from "typescript";
+
 import { IUserRegister, IBlog } from "../TypeScript";
 export const ValidRegister = (data: IUserRegister) => {
   const { name, account, password, cf_password } = data;
@@ -6,7 +6,7 @@ export const ValidRegister = (data: IUserRegister) => {
   if (!name) {
     errs.push("please add your name");
   } else if (name.length > 20) {
-    errs.push("please check your name length");
+    errs.push("Name must be less than 20 chars");
   }
 
   const msg = checkPassword(password, cf_password);
@@ -29,9 +29,9 @@ export const validateEmail = (email: string) => {
 
 export const checkPassword = (password: string, cf_password: string) => {
   if (password.length < 6) {
-    return "password must at least 6 chars";
+    return "password must be at least 6 chars";
   } else if (password !== cf_password) {
-    return "Confirm password did not match";
+    return "Confirm password not match";
   }
 };
 

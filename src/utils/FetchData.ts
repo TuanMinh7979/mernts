@@ -10,7 +10,6 @@ export const getAPI = async (url: string, token?: string) => {
   const res = await axios.get(`/api/${url}`, {
     headers: { Authorization: token },
   });
-
   return res;
 };
 

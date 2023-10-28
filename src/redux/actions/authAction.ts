@@ -4,12 +4,12 @@ import { AUTH, IAuthType } from "../types/authType";
 import { ALERT, IAlertType } from "../types/alertType";
 import { ValidRegister } from "../../utils/Valid";
 import { Dispatch } from "redux";
-import { checkTokenExp } from "../../utils/checkTokenExp";
-import { logError } from "./actions-utils";
+import { checkTokenExp, showError } from "../../utils/TokenUtils";
+
 export const login =
   (userLogin: any) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
-      dispatch({ type: ALERT, payload: { loading: true} });
+      dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("login", userLogin);
 
       dispatch({
@@ -21,7 +21,7 @@ export const login =
 
       localStorage.setItem("logged", "myusername");
     } catch (err: any) {
-      logError(err, dispatch);
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
 export const register =
@@ -40,7 +40,7 @@ export const register =
 
       dispatch({ type: ALERT, payload: { success: "Register Success!" } });
     } catch (err: any) {
-      logError(err, dispatch);
+      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
   };
 export const refreshToken =
@@ -55,11 +55,10 @@ export const refreshToken =
     //if login get new token
 
     try {
-       const res = await getAPI("refresh_token");
+      const res = await getAPI("refresh_token");
       dispatch({ type: AUTH, payload: res.data });
-
     } catch (err: any) {
-      // logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
 
@@ -71,6 +70,6 @@ export const logout =
       dispatch({ type: AUTH, payload: {} });
       await getAPI("logout", access_token);
     } catch (err: any) {
-      logError(err, dispatch);
+      showError(err, dispatch);
     }
   };
