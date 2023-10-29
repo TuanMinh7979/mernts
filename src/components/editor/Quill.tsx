@@ -72,30 +72,28 @@ const Quill: React.FC<IProps> = ({ setBody, body }) => {
   //cis
 
   return (
-
-      <ReactQuill
-        theme="snow"
-        modules={modules}
-        placeholder="something..."
-        ref={quillRef}
-        onChange={(e) => hdlChange(e)}
-        value={body}
-      ></ReactQuill>
-
+    <ReactQuill
+      theme="snow"
+      modules={modules}
+      placeholder="something..."
+      ref={quillRef}
+      onChange={(e) => hdlChange(e)}
+      value={body}
+    ></ReactQuill>
   );
 };
 
 let container = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
-  // ["blockquote", "code-block"],
-  // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  // [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  ["blockquote", "code-block"],
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
 
-  // [{ list: "ordered" }, { list: "bullet" }],
-  // [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  // [{ direction: "rtl" }], // text direction
-  // [{ align: [] }],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ direction: "rtl" }], // text direction
+  [{ align: [] }],
 
-  // ["clean", "link", "image", "video"],
+  ["clean", "link", "image", "video"],
 ];
 export default Quill;

@@ -38,15 +38,15 @@ const LiteQuill: React.FC<IProps> = ({ body, setBody }) => {
 
 let container = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
-  ["blockquote", "code-block"],
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  // ["blockquote", "code-block"],
+  // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  // [{ script: "sub" }, { script: "super" }], // superscript/subscript
 
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  [{ direction: "rtl" }], // text direction
-  [{ align: [] }],
+  // [{ list: "ordered" }, { list: "bullet" }],
+  // [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  // [{ direction: "rtl" }], // text direction
+  // [{ align: [] }],
 
-  ["clean", "link", "image", "video"],
+  // ["clean", "link", "image", "video"],
 ];
 export default LiteQuill;
