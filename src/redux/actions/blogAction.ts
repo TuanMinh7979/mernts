@@ -43,7 +43,7 @@ export const createBlog =
       const newBlog = { ...blog, thumbnail: url };
 
       const res = await postAPI("blog", newBlog, access_token);
-      console.log("from server", res);
+
       dispatch({
         type: CREATE_BLOGS_USER_ID,
         payload: res.data,
@@ -112,7 +112,7 @@ export const updateBlog =
       const newBlog = { ...blog, thumbnail: url };
 
       const res = await putAPI(`blog/${newBlog._id}`, newBlog, access_token);
-      console.log(res);
+
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
     } catch (err: any) {
       showError(err, dispatch);

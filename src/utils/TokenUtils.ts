@@ -25,7 +25,7 @@ export const checkTokenExp = async (
     return access_token;
   }
 
-  console.log("..........><><>", Cookies.get("refreshtoken") == access_token);
+
   try {
     dispatch({ type: ALERT, payload: { success: "Refresh new token" } });
     const res = await getAPI("refresh_token");

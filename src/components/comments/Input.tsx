@@ -19,7 +19,7 @@ const Input: React.FC<IProps> = ({ callback, edit, setEdit }) => {
       if (setEdit) return setEdit(undefined);
       return;
     }
-    // console.log("text now: ", text)
+
     callback(body);
 
     setBody("");
