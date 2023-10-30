@@ -11,7 +11,7 @@ import { getCates } from "./redux/actions/categoryAction";
 import { getHomeBlogs } from "./redux/actions/blogAction";
 import { io } from "socket.io-client";
 import SocketClient from "./SocketClient";
-import { useState } from "react";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function App() {
     dispatch(getCates());
     dispatch(getHomeBlogs());
     dispatch(refreshToken());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const socket = io();
@@ -30,6 +30,8 @@ function App() {
       socket.close();
     };
   }, [dispatch]);
+
+
   return (
     <>
       <Alert></Alert>

@@ -2,7 +2,8 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { AUTH } from "../redux/types/authType";
 import { ALERT } from "../redux/types/alertType";
-import { log } from "console";
+import Cookies from "js-cookie";
+import { getAPI } from "./FetchData";
 
 interface IToken {
   exp: number;
@@ -18,14 +19,16 @@ export const checkTokenExp = async (
   // use if(checkTokenExpRs) token= checkTokenExpRs, make sure only if there is a  new token,  asssign it to token
   // if there is not access_token=>  not assign=> let user to login again
   if (!access_token) return access_token;
-  const access_tokenDecode: IToken = jwt_decode(access_token);
+  const access_tokenDecode: IToken = jwt_decode(access_token as string);
   if (access_tokenDecode.exp >= Date.now() / 1000) {
     // if token valid => not assign=>continue use old token
     return access_token;
   }
+
+  console.log("..........><><>", Cookies.get("refreshtoken") == access_token);
   try {
     dispatch({ type: ALERT, payload: { success: "Refresh new token" } });
-    const res = await axios.get("/api/refresh_token");
+    const res = await getAPI("refresh_token");
     dispatch({ type: AUTH, payload: res.data });
     if (res.data && res.data.access_token) return res.data.access_token;
   } catch (e: any) {
@@ -48,4 +51,10 @@ export const showError = (error: any, dispatch: any) => {
     return logout(dispatch);
   }
   dispatch({ type: ALERT, payload: { error: error.response.data.msg } });
+};
+
+export const getTimeToExpiration = (exp: number) => {
+  const currentTime = Math.floor(Date.now() / 1000); // Chuyển thời gian hiện tại thành giây
+  const timeToExpiration = exp - currentTime;
+  return timeToExpiration > 0 ? timeToExpiration : 0;
 };
