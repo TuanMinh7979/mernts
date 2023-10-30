@@ -65,7 +65,7 @@ const authCtrl = {
 
       const access_token = generateAccessToken({
         id: user._id,
-        name: user.name,
+
       });
       generateRefreshToken({ id: user._id }, res);
 
