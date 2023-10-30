@@ -14,16 +14,17 @@ import "./config/database";
 import { SocketServer } from "./config/socket";
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: `${process.env.BASE_URL}`,
     credentials: true,
   })
 );
-app.use(morgan("dev"));
-app.use(cookieParser());
+// app.use(morgan("dev"));
+
 
 const http = createServer(app);
 export const io = new Server(http);

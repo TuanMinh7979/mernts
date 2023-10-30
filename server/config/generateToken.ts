@@ -12,10 +12,6 @@ export const generateRefreshToken = (payload: object, res: Response) => {
     expiresIn: process.env.RF_TOKEN_EXP,
   });
 
-  res.cookie("refreshtoken", refresh_token, {
-    // httpOnly: true,
-    path: `/api/refresh_token`,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-  });
+  res.cookie("refreshtoken", refresh_token);
   return refresh_token;
 };

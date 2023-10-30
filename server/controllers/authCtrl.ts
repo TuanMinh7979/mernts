@@ -63,8 +63,11 @@ const authCtrl = {
         return res.status(400).json({ msg: msgError });
       }
 
-      const access_token = generateAccessToken({ id: user._id });
-      const refresh_token = generateRefreshToken({ id: user._id }, res);
+      const access_token = generateAccessToken({
+        id: user._id,
+        name: user.name,
+      });
+      generateRefreshToken({ id: user._id }, res);
 
       res.json({
         msg: "Login Success!",
@@ -92,9 +95,12 @@ const authCtrl = {
 
   refreshToken: async (req: Request, res: Response) => {
     try {
+      console.log(req.headers.cookie);
       const rf_token = req.cookies.refreshtoken;
+      // console.log( req.cookies);
+
       if (!rf_token)
-        return res.status(400).json({ msg: "Dont have Refresh token" });
+        return res.status(400).json({ msg: "Dont have Refresh token 123" });
       let decoded;
       try {
         decoded = <IDecodedToken>(
