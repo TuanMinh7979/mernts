@@ -17,6 +17,8 @@ export const generateRefreshToken = (payload: object, res: Response) => {
     httpOnly: true,
     path: `/api/refresh_token`,
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+    secure: true, // Đảm bảo sử dụng HTTPS
+
   });
   return refresh_token;
 };
