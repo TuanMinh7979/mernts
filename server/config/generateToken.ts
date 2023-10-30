@@ -15,10 +15,10 @@ export const generateRefreshToken = (payload: object, res: Response) => {
   // res.cookie("refreshtoken", refresh_token);
   res.cookie("refreshtoken", refresh_token, {
     httpOnly: true,
+    sameSite: "none",
+    secure: true,
     path: `/api/refresh_token`,
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-    secure: true, // Đảm bảo sử dụng HTTPS
-
   });
   return refresh_token;
 };
