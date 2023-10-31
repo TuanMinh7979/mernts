@@ -54,7 +54,7 @@ const CountDown = (props: any) => {
         timerMinutes == 0 &&
         timerHours == 0 &&
         timerSeconds == 0) ? (
-        <p>Expired</p>
+        <p style={{ textAlign: "center" }}>Expired</p>
       ) : (
         <div>
           <section>

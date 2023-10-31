@@ -34,15 +34,16 @@ export const checkTokenExp = async (
   }
 };
 
-export const logout = (dispatch: any) => {
+export const clientLogout = (dispatch: any) => {
   dispatch({ type: AUTH, payload: {} });
-  localStorage.removeItem("logged");
+
+  localStorage.removeItem("loggedTk");
 };
 
 export const showError = (error: any, dispatch: any) => {
   if (error.name == "RefreshTokenError") {
     dispatch({ type: ALERT, payload: { error: error.message } });
-    return logout(dispatch);
+    return clientLogout(dispatch);
   }
   dispatch({ type: ALERT, payload: { error: error.response.data.msg } });
 };
@@ -54,8 +55,6 @@ export const getTimeToExpiration = (exp: number) => {
 };
 
 export const getAccessTokenExp = (access_token: string) => {
-
-
   const accessTokenDecode: IToken = jwt_decode(access_token as string);
 
   if (accessTokenDecode.exp <= Date.now() / 1000) {

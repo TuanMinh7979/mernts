@@ -14,12 +14,16 @@ export const login =
 
       dispatch({
         type: "AUTH",
-        payload: res.data,
+        payload: {
+          access_token: res.data.access_token,
+          user: res.data.user,
+        },
       });
 
       dispatch({ type: ALERT, payload: { success: res.data.msg } });
 
-      localStorage.setItem("logged", "myusername");
+  
+      localStorage.setItem("loggedTk", res.data.loggedTk);
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
     }
@@ -45,10 +49,11 @@ export const register =
   };
 export const refreshToken =
   () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
-    const logged = localStorage.getItem("logged");
-    //if not logged return
 
-    if (!logged) {
+    const localRfToken = localStorage.getItem("loggedTk");
+    //if not logged returnI
+
+    if (!localRfToken) {
       //if logged thi khong refresh token
       return;
     }
@@ -66,7 +71,8 @@ export const logout =
   (token: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
-      localStorage.removeItem("logged");
+
+      localStorage.removeItem("loggedTk");
       dispatch({ type: AUTH, payload: {} });
       await getAPI("logout", access_token);
     } catch (err: any) {

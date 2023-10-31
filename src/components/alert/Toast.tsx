@@ -1,5 +1,4 @@
 import React from "react";
-import { ALERT } from "../../redux/types/alertType";
 import { useDispatch } from "react-redux";
 interface IProps {
   title: string;
