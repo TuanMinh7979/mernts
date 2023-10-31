@@ -19,15 +19,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: `${process.env.BASE_URL}`,
+    origin: `${process.env.CLIENT_URL}`,
     credentials: true,
   })
 );
 // app.use(morgan("dev"));
 
-
 const http = createServer(app);
-export const io = new Server(http);
+export const io = new Server(http, {
+  cors: {
+    origin: `${process.env.CLIENT_URL}`,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  },
+});
 io.on("connection", (socket: Socket) => {
   SocketServer(socket);
 });

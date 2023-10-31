@@ -95,9 +95,9 @@ const authCtrl = {
 
   refreshToken: async (req: Request, res: Response) => {
     try {
-      console.log(req.headers.cookie);
+
       const rf_token = req.cookies.refreshtoken;
-      // console.log( req.cookies);
+
 
       if (!rf_token)
         return res.status(400).json({ msg: "Dont have Refresh token 123" });

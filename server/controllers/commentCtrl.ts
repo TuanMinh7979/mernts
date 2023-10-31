@@ -30,6 +30,9 @@ const commentCtrl = {
         createdAt: new Date().toISOString(),
       };
 
+
+
+      
       io.to(`${blog_id}`).emit("createComment", data);
 
       await newComment.save();
