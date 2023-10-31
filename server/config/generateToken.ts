@@ -16,10 +16,9 @@ export const generateRefreshToken = (payload: object, res: Response) => {
   // res.cookie("refreshtoken", refresh_token);
   // production
   res.cookie("refreshtoken", refresh_token, {
-
+    httpOnly: true,
     sameSite: "none",
     secure: true,
-
   });
   return refresh_token;
 };
