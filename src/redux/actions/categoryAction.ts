@@ -15,12 +15,8 @@ import {
 import { ICategory } from "../../TypeScript";
 import { checkTokenExp, getTimeToExpiration } from "../../utils/TokenUtils";
 import { showError } from "../../utils/TokenUtils";
-import Cookies from "js-cookie";
-interface IToken {
-  exp: number;
-  iat: number;
-  id: string;
-}
+
+import { IToken } from "../../TypeScript";
 
 export const getCates = () => async (dispatch: Dispatch<IAlertType>) => {
   try {

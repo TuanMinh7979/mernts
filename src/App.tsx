@@ -5,14 +5,13 @@ import Header from "./components/global/Header";
 import Footer from "./components/global/Footer";
 import { Alert } from "./components/alert/Alert";
 import { useDispatch } from "react-redux";
-
+import Loading from "./components/alert/Loading";
 import { refreshToken } from "./redux/actions/authAction";
 import { getCates } from "./redux/actions/categoryAction";
 import { getHomeBlogs } from "./redux/actions/blogAction";
 import { io } from "socket.io-client";
 import SocketClient from "./SocketClient";
-
-
+import CountDown from "./components/countdown/CountDown";
 function App() {
   const dispatch = useDispatch();
 
@@ -21,25 +20,24 @@ function App() {
     dispatch(getCates());
     dispatch(getHomeBlogs());
     dispatch(refreshToken());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
-    const socket = io();
+    const socket = io(`${process.env.REACT_APP_API_BASE_URL}`);
     dispatch({ type: "SOCKET", payload: socket });
     return () => {
       socket.close();
     };
-  }, [dispatch]);
-
+  }, []);
 
   return (
     <>
       <Alert></Alert>
-      <SocketClient></SocketClient>
-      
-      <div className="container">
 
-      <BrowserRouter>
+      <SocketClient></SocketClient>
+
+      <div className="container">
+        <BrowserRouter>
           <Header></Header>
           <Routes>
             <Route path="/" element={<PageRender />} />
@@ -49,6 +47,8 @@ function App() {
           <Footer></Footer>
         </BrowserRouter>
       </div>
+
+      {/* <CountDown></CountDown> */}
     </>
   );
 }

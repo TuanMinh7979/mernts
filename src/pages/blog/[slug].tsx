@@ -33,19 +33,18 @@ const DetailBlog = () => {
   //Join room
   useEffect(() => {
     if (!slug || !socketState) return;
+    console.log("EMIT JOIN ROOM>>>>>>>>>>>>>>>>>>");
+
     socketState.emit("joinRoom", slug);
     return () => {
-   
       socketState.emit("outRoom", slug);
     };
   }, [socketState, slug]);
   //Join room
 
-
   return (
     <div>
       {error && showErrorMsg(error)}
-
 
       {blog && <DisplayBlog blog={blog}></DisplayBlog>}
     </div>

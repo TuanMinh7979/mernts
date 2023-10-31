@@ -29,7 +29,6 @@ export interface IUser extends IUserLogin {
 
 export interface IUserRegister extends IUserLogin {
   name: string;
-
   cf_password: string;
 }
 
@@ -69,3 +68,11 @@ export interface IComment {
   comment_root?: string;
   createdAt: string;
 }
+
+
+export interface IToken {
+  exp: number;
+  iat: number;
+  id: string;
+}
+

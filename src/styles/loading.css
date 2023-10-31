@@ -1,30 +1,34 @@
-.overlay {
+/* .overlay {
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 1000;
-
+  z-index: 1111;
   background-color: rgba(0, 0, 0, 0.2);
+} */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Màu đen với độ trong suốt 50% */
+  z-index: 1000;
+  /* Đảm bảo lớp overlay nằm phía trên phần tử nền */
 }
-
 
 .loader {
 
   position: relative;
   left: calc(50% - 2rem);
-  top: 35%;
-
-
+  top: 50vh;
+  margin-top: -2rem;
   opacity: 1 !important;
-
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-
-
   border: 3px solid;
   border-color: cornflowerblue cornflowerblue transparent transparent;
-
   animation: rotation 1s linear infinite;
   background-color: transparent;
 }
@@ -52,7 +56,7 @@
 
 .loader::before {
 
- 
+
   border-color: cornflowerblue #fff transparent transparent;
   animation: rotation 2s linear infinite;
 }
@@ -77,8 +81,3 @@
     transform: rotate(-360deg);
   }
 }
-
-
-
-
-

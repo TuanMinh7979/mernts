@@ -15,8 +15,10 @@ const SocketClient = () => {
 
   //Create Comment
   useEffect(() => {
+    console.log(">>>>>>>>>>>", socketState);
     if (!socketState) return;
     socketState.on("createComment", (data) => {
+      console.log("--------------DATA from create data " , data);
       dispatch({
         type: CREATE_COMMENT,
         payload: data,

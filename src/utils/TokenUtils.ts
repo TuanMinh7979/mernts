@@ -4,12 +4,7 @@ import { AUTH } from "../redux/types/authType";
 import { ALERT } from "../redux/types/alertType";
 import Cookies from "js-cookie";
 import { getAPI } from "./FetchData";
-
-interface IToken {
-  exp: number;
-  iat: number;
-  id: string;
-}
+import { IToken } from "../TypeScript";
 
 export const checkTokenExp = async (
   access_token: string | undefined,
@@ -24,7 +19,6 @@ export const checkTokenExp = async (
     // if token valid => not assign=>continue use old token
     return access_token;
   }
-
 
   try {
     dispatch({ type: ALERT, payload: { success: "Refresh new token" } });
@@ -57,4 +51,15 @@ export const getTimeToExpiration = (exp: number) => {
   const currentTime = Math.floor(Date.now() / 1000); // Chuyển thời gian hiện tại thành giây
   const timeToExpiration = exp - currentTime;
   return timeToExpiration > 0 ? timeToExpiration : 0;
+};
+
+export const getAccessTokenExp = (access_token: string) => {
+  console.log(">>>>>>>>>", access_token);
+  
+  const access_tokenDecode: IToken = jwt_decode(access_token as string);
+  return access_tokenDecode.exp;
+};
+export const getRefreshTokenExp = (rfToken: string) => {
+  const rfTokenDecode: IToken = jwt_decode(rfToken as string);
+  return rfTokenDecode.exp;
 };
