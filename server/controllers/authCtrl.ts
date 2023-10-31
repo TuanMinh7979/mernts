@@ -65,13 +65,13 @@ const authCtrl = {
 
       const access_token = generateAccessToken({
         id: user._id,
-
       });
-      generateRefreshToken({ id: user._id }, res);
+      const rftoken = generateRefreshToken({ id: user._id }, res);
 
       res.json({
         msg: "Login Success!",
         access_token,
+        loggedTk: rftoken,
         user: { ...user._doc, password: "" },
       });
     } catch (err: any) {
@@ -95,9 +95,7 @@ const authCtrl = {
 
   refreshToken: async (req: Request, res: Response) => {
     try {
-
       const rf_token = req.cookies.refreshtoken;
-
 
       if (!rf_token)
         return res.status(400).json({ msg: "Dont have Refresh token 123" });
