@@ -25,9 +25,9 @@ const Menu = () => {
   };
 
   const handleLogout = () => {
-    if(!authState.access_token) return;
-    dispatch(logout(authState.access_token))
-  }
+    if (!authState.access_token) return;
+    dispatch(logout(authState.access_token));
+  };
 
   return (
     <ul className="navbar-nav  ms-auto">
@@ -40,11 +40,11 @@ const Menu = () => {
       ))}
 
       {/* {authState.user?.role === "admin" &&  */}
-        <li className={`nav-item ${isActive("/category")}`}>
-          <Link to="/category" className="nav-link">
-            Category
-          </Link>
-        </li>
+      <li className={`nav-item ${isActive("/category")}`}>
+        <Link to="/category" className="nav-link">
+          Category
+        </Link>
+      </li>
       {/* // } */}
       {authState.user && (
         <li className="nav-item dropdown">
@@ -69,15 +69,13 @@ const Menu = () => {
               >
                 Profile
               </Link>
-              <li>
-                <Link
-                  to="/"
-                  className="dropdown-item"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Link>
-              </li>
+
+              <Link to="/" className="dropdown-item" onClick={handleLogout}>
+                Logout
+              </Link>
+              <Link to="/info" className="dropdown-item" >
+                Login Info
+              </Link>
             </li>
           </ul>
         </li>

@@ -54,12 +54,19 @@ export const getTimeToExpiration = (exp: number) => {
 };
 
 export const getAccessTokenExp = (access_token: string) => {
-  console.log(">>>>>>>>>", access_token);
-  
-  const access_tokenDecode: IToken = jwt_decode(access_token as string);
-  return access_tokenDecode.exp;
+
+
+  const accessTokenDecode: IToken = jwt_decode(access_token as string);
+
+  if (accessTokenDecode.exp <= Date.now() / 1000) {
+    return "expired";
+  }
+  return accessTokenDecode.exp;
 };
 export const getRefreshTokenExp = (rfToken: string) => {
   const rfTokenDecode: IToken = jwt_decode(rfToken as string);
+  if (rfTokenDecode.exp <= Date.now() / 1000) {
+    return "expired";
+  }
   return rfTokenDecode.exp;
 };

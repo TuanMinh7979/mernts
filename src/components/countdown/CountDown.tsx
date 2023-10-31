@@ -5,11 +5,10 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const CountDown = (props: any) => {
-  
-  const [timerDays, setTimerDays] = useState<any>("00");
-  const [timerHours, setTimerHours] = useState<any>("00");
-  const [timerMinutes, setTimerMinutes] = useState<any>("00");
-  const [timerSeconds, setTimerSeconds] = useState<any>("00");
+  const [timerDays, setTimerDays] = useState<any>("--");
+  const [timerHours, setTimerHours] = useState<any>("--");
+  const [timerMinutes, setTimerMinutes] = useState<any>("--");
+  const [timerSeconds, setTimerSeconds] = useState<any>("--");
   let interval: any = useRef(null);
   const startTimer = () => {
     // 'November 01, 2023 00:00:00'
@@ -37,43 +36,56 @@ const CountDown = (props: any) => {
   };
 
   useEffect(() => {
-    startTimer();
+    if (props.exp !== "expired") {
+      startTimer();
+    }
+
     return () => {
-      clearInterval(interval?.current!);
+      if (props.exp !== "expired") {
+        clearInterval(interval?.current!);
+      }
     };
   });
   return (
     <section className="timer">
-      <h3 style={{ textAlign: "center" }}>Access Token Time</h3>
-      <div>
-        <section>
-          <p>{timerDays}</p>
-          <p>
-            <small>Days</small>
-          </p>
-        </section>
-        <span>:</span>
-        <section>
-          <p>{timerHours}</p>
-          <p>
-            <small>Hours</small>
-          </p>
-        </section>
-        <span>:</span>
-        <section>
-          <p>{timerMinutes}</p>
-          <p>
-            <small>Minutes</small>
-          </p>
-        </section>
-        <span>:</span>
-        <section>
-          <p>{timerSeconds}</p>
-          <p>
-            <small>Seconds</small>
-          </p>
-        </section>
-      </div>
+      <h3 style={{ textAlign: "center" }}>{props.title}</h3>
+      {props.exp == "expired" ||
+      (timerDays == 0 &&
+        timerMinutes == 0 &&
+        timerHours == 0 &&
+        timerSeconds == 0) ? (
+        <p>Expired</p>
+      ) : (
+        <div>
+          <section>
+            <p>{timerDays}</p>
+            <p>
+              <small>Days</small>
+            </p>
+          </section>
+          <span>:</span>
+          <section>
+            <p>{timerHours}</p>
+            <p>
+              <small>Hours</small>
+            </p>
+          </section>
+          <span>:</span>
+          <section>
+            <p>{timerMinutes}</p>
+            <p>
+              <small>Minutes</small>
+            </p>
+          </section>
+          <span>:</span>
+          <section>
+            <p>{timerSeconds}</p>
+            <p>
+              <small>Seconds</small>
+            </p>
+          </section>
+        </div>
+      )}
     </section>
   );
 };
