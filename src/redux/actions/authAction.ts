@@ -1,13 +1,13 @@
 import { IUserLogin, IUserRegister } from "../../TypeScript";
 import { getAPI, postAPI } from "../../utils/FetchData";
 import { AUTH, IAuthType } from "../types/authType";
-import { ALERT, IAlertType } from "../types/alertType";
+import { ALERT, IAlertType, NEW_TOAST } from "../types/alertType";
 import { ValidRegister } from "../../utils/Valid";
 import { Dispatch } from "redux";
 import { checkTokenExp, showError } from "../../utils/TokenUtils";
 
 export const login =
-  (userLogin: any) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+  (userLogin: any) => async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ALERT, payload: { loading: true } });
       const res = await postAPI("login", userLogin);
@@ -20,9 +20,11 @@ export const login =
         },
       });
 
-      dispatch({ type: ALERT, payload: { success: res.data.msg } });
+      dispatch({
+        type: NEW_TOAST,
+        payload: { message: res.data.msg, type: "success" },
+      });
 
-  
       localStorage.setItem("loggedTk", res.data.loggedTk);
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
@@ -49,7 +51,6 @@ export const register =
   };
 export const refreshToken =
   () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
-
     const localRfToken = localStorage.getItem("loggedTk");
     //if not logged returnI
 

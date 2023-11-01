@@ -2,14 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Loading from "./Loading";
 import { RootStore } from "../../TypeScript";
-import Toast from "./Toast";
+import CustomToast from "./CustomToast";
 export const Alert = () => {
   const { alertState } = useSelector((state: RootStore) => state);
+
   //MAGIC HEAR//
   return (
     <div>
-      {alertState.loading && !alertState.showSpinner && <Loading />}
-      {alertState.error && (
+      {/* {alertState.loading && !alertState.showSpinner && <Loading />} */}
+      {/* {alertState.error && (
         <Toast title="Error" body={alertState.error} bgColor="bg-danger" />
       )}
       {alertState.success && (
@@ -22,7 +23,9 @@ export const Alert = () => {
           body={alertState.clientErr}
           bgColor="bg-secondary"
         />
-      )}
+      )} */}
+
+
     </div>
   );
 };

@@ -4,7 +4,7 @@ import PageRender from "./PageRender";
 import Header from "./components/global/Header";
 import Footer from "./components/global/Footer";
 import { Alert } from "./components/alert/Alert";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "./components/alert/Loading";
 import { refreshToken } from "./redux/actions/authAction";
 import { getCates } from "./redux/actions/categoryAction";
@@ -12,6 +12,8 @@ import { getHomeBlogs } from "./redux/actions/blogAction";
 import { io } from "socket.io-client";
 import SocketClient from "./SocketClient";
 import CountDown from "./components/countdown/CountDown";
+import CustomToast from "./components/alert/CustomToast";
+import { RootStore } from "./TypeScript";
 function App() {
   const dispatch = useDispatch();
 
@@ -29,11 +31,18 @@ function App() {
       socket.close();
     };
   }, []);
-
+  const {  toastState } = useSelector((state: RootStore) => state);
   return (
     <>
       <Alert></Alert>
 
+      {toastState && toastState.length > 0 && (
+        <CustomToast
+          position="top-right"
+          toastList={toastState}
+          autoDelete={true}
+        />
+      )}
       <SocketClient></SocketClient>
 
       <div className="container">

@@ -15,3 +15,7 @@ export interface IAlertType {
   type: string;
   payload: IAlert;
 }
+
+
+export const NEW_TOAST = "NEW_TOAST"
+export const REMOVE_TOASTS = "REMOVE_TOASTS"
