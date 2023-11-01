@@ -27,16 +27,16 @@ const CustomToast = (props: any) => {
     setList([...toastList]);
   }, [toastList]);
 
-  // useEffect(() => {
-  //   const tick = () => {
-  //     deleteToast();
-  //   };
+  useEffect(() => {
+    const tick = () => {
+      deleteToast();
+    };
 
-  //   if (autoDelete && toastList.length && list.length) {
-  //     const interval = setInterval(tick, autoDeleteTime);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [toastList, autoDelete, autoDeleteTime, list, deleteToast]);
+    if (autoDelete && toastList.length && list.length) {
+      const interval = setInterval(tick, autoDeleteTime);
+      return () => clearInterval(interval);
+    }
+  }, [toastList, autoDelete, autoDeleteTime, list, deleteToast]);
 
   return (
     <div className={`toast-notification-container ${position}`}>
