@@ -91,6 +91,8 @@ const blogCtrl = {
             name: 1,
           },
         },
+
+        { $sort: { name: 1 } },
       ]);
       res.json(blogs);
     } catch (err: any) {
@@ -237,7 +239,6 @@ const blogCtrl = {
 
   getBlog: async (req: Request, res: Response) => {
     try {
- 
       const blog = await Blogs.findOne({ _id: req.params.id }).populate(
         "user",
         "-password"
@@ -290,7 +291,6 @@ const blogCtrl = {
     }
   },
   searchBlogs: async (req: Request, res: Response) => {
-
     try {
       const blogs = await Blogs.find({
         title: {
