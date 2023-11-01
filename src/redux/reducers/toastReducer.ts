@@ -49,8 +49,9 @@ const ToastReducer = (state: IToastState = initState, action: any) => {
       };
 
       let newList = state.toasts ? [...state.toasts] : [];
-      newList = [...uniqBy(newList, "description")];
+
       newList.unshift(toastItem);
+      newList = [...uniqBy(newList, "description")];
 
       return { loading: false, showSpinner: false, toasts: newList };
     case REMOVE_TOASTS:
