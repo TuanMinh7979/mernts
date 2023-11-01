@@ -3,25 +3,49 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageRender from "./PageRender";
 import Header from "./components/global/Header";
 import Footer from "./components/global/Footer";
-import { Alert } from "./components/alert/Alert";
+
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./components/alert/Loading";
-import { refreshToken } from "./redux/actions/authAction";
-import { getCates } from "./redux/actions/categoryAction";
-import { getHomeBlogs } from "./redux/actions/blogAction";
+
 import { io } from "socket.io-client";
 import SocketClient from "./SocketClient";
-import CountDown from "./components/countdown/CountDown";
+
 import CustomToast from "./components/alert/CustomToast";
 import { RootStore } from "./TypeScript";
+import { showError, showSpinner, stopSpinner } from "./utils/Utils";
+import { getAPI } from "./utils/FetchData";
+import { GET_CATES } from "./redux/types/categoryType";
+import { GET_HOME_BLOGS } from "./redux/types/blogType";
+import { AUTH } from "./redux/types/authType";
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    async function fetchInit() {
+      try {
+        showSpinner(dispatch);
+        const res = await getAPI("category");
+
+        dispatch({ type: GET_CATES, payload: res.data.categories });
+        const res1 = await getAPI("home/blogs");
+        dispatch({ type: GET_HOME_BLOGS, payload: res1.data });
+        const localRfToken = localStorage.getItem("loggedTk");
+        //if not logged returnI
+
+        if (localRfToken) {
+          const res2 = await getAPI("refresh_token");
+          dispatch({ type: AUTH, payload: res2.data });
+        }
+        //if login get new token
+
+        stopSpinner(dispatch);
+      } catch (err: any) {
+        showError(err, dispatch);
+        stopSpinner(dispatch);
+      }
+    }
     //thay vi luu vao store ta se dispatch moi lan ung dung reload
-    dispatch(getCates());
-    dispatch(getHomeBlogs());
-    dispatch(refreshToken());
+    fetchInit();
   }, []);
 
   useEffect(() => {
@@ -31,15 +55,14 @@ function App() {
       socket.close();
     };
   }, []);
-  const {  toastState } = useSelector((state: RootStore) => state);
+  const { toastState } = useSelector((state: RootStore) => state);
   return (
     <>
-      <Alert></Alert>
-
-      {toastState && toastState.length > 0 && (
+      {toastState.loading && !toastState.showSpinner && <Loading />}
+      {toastState && toastState.toasts && toastState.toasts.length > 0 && (
         <CustomToast
           position="top-right"
-          toastList={toastState}
+          toastList={toastState.toasts}
           autoDelete={true}
         />
       )}

@@ -1,10 +1,6 @@
 
-import { log } from "console";
-import { ErrorResponse } from "@remix-run/router";
 import { Dispatch } from "redux";
-import { ALERT, IAlertType } from "../types/alertType";
 import { postAPI, getAPI, patchAPI, deleteAPI } from "../../utils/FetchData";
-import jwt_decode from "jwt-decode";
 import {
   CREATE_CATE,
   DELETE_CATE,
@@ -14,32 +10,29 @@ import {
 } from "../types/categoryType";
 import { ICategory } from "../../TypeScript";
 import { checkTokenExp, getTimeToExpiration } from "../../utils/TokenUtils";
-import { showError } from "../../utils/TokenUtils";
+import { showError, showLoading, stopLoading } from "../../utils/Utils";
 
 import { IToken } from "../../TypeScript";
 
-export const getCates = () => async (dispatch: Dispatch<IAlertType>) => {
+export const getCates = () => async (dispatch: Dispatch) => {
   try {
-    // dispatch({ type: ALERT, payload: { loading: true, showSpinner: true } });
     const res = await getAPI("category");
 
     dispatch({ type: GET_CATES, payload: res.data.categories });
-    // dispatch({ type: ALERT, payload: {} });
   } catch (err: any) {
     // showError(err, dispatch);
   }
 };
 
 export const createCategory =
-  (name: string, token: string | undefined) =>
-  async (dispatch: Dispatch<IAlertType>) => {
-    
+  (name: string, token: string | undefined) => async (dispatch: Dispatch) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
-      dispatch({ type: ALERT, payload: { loading: true } });
+      showLoading(dispatch);
       const res = await postAPI("category", { name }, access_token);
       dispatch({ type: CREATE_CATE, payload: res.data.newCategory });
-      dispatch({ type: ALERT, payload: {} });
+
+      stopLoading(dispatch);
     } catch (err: any) {
       showError(err, dispatch);
     }
@@ -47,29 +40,29 @@ export const createCategory =
 
 export const updateCategory =
   (data: ICategory, token: string | undefined) =>
-  async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+  async (dispatch: Dispatch<ICategoryType>) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
-      dispatch({ type: ALERT, payload: { loading: true } });
+      showLoading(dispatch);
       const res = await patchAPI(`category/${data._id}`, data, access_token);
 
       dispatch({ type: UPDATE_CATE, payload: data });
-      dispatch({ type: ALERT, payload: {} });
+      stopLoading(dispatch);
     } catch (err: any) {
       showError(err, dispatch);
     }
   };
 export const deteteCategory =
   (id: string, token: string | undefined) =>
-  async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+  async (dispatch: Dispatch< ICategoryType>) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
 
-      dispatch({ type: ALERT, payload: { loading: true } });
+      showLoading(dispatch);
       const res = await deleteAPI(`category/${id}`, access_token);
 
       dispatch({ type: DELETE_CATE, payload: id });
-      dispatch({ type: ALERT, payload: {} });
+      stopLoading(dispatch);
     } catch (err: any) {
       showError(err, dispatch);
     }

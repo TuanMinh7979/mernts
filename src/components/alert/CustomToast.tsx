@@ -4,7 +4,7 @@ import { useEffect, useCallback, useRef, useState } from "react";
 import "./CustomToast.css";
 
 import { useDispatch } from "react-redux";
-import { REMOVE_TOASTS } from "../../redux/types/alertType";
+import { REMOVE_TOASTS } from "../../redux/types/toastType";
 
 const CustomToast = (props: any) => {
   const { toastList, position, autoDelete, autoDeleteTime = 2000 } = props;
@@ -27,17 +27,16 @@ const CustomToast = (props: any) => {
     setList([...toastList]);
   }, [toastList]);
 
-  useEffect(() => {
-    const tick = () => {
-      deleteToast();
-    };
+  // useEffect(() => {
+  //   const tick = () => {
+  //     deleteToast();
+  //   };
 
-    if (autoDelete && toastList.length && list.length) {
-      const interval = setInterval(tick, autoDeleteTime);
-      return () => clearInterval(interval);
-    }
-  }, [toastList, autoDelete, autoDeleteTime, list, deleteToast]);
-
+  //   if (autoDelete && toastList.length && list.length) {
+  //     const interval = setInterval(tick, autoDeleteTime);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [toastList, autoDelete, autoDeleteTime, list, deleteToast]);
 
   return (
     <div className={`toast-notification-container ${position}`}>
@@ -45,7 +44,7 @@ const CustomToast = (props: any) => {
         <div
           data-testid="toast-notification"
           // key={Utils.generateString(10)}
-          className={`toast-notification toast1 ${position}`}
+          className={`toast-notification custom-toast ${position}`}
           style={{ backgroundColor: toast.backgroundColor }}
         >
           <button className="cancel-button" onClick={() => deleteToast()}>
@@ -63,7 +62,17 @@ const CustomToast = (props: any) => {
               toast?.description?.length <= 73 ? "toast-message" : ""
             }`}
           >
-            {toast.description}
+            {typeof toast.description === "string" ? (
+              toast.description
+            ) : (
+              <ul>
+                {toast.description.map((text: string, index: number) => (
+                  <li style={{ listStyleType: "none" }} key={index}>
+                    {text}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       ))}

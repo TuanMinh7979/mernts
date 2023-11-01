@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { showErrorMsg } from "../../components/alert/Alert";
-import Loading from "../../components/alert/Loading";
+import { ErrorMessage } from "../../components/alert/Alert";
+
 import { RootStore } from "../../TypeScript";
 import { getAPI } from "../../utils/FetchData";
 import DisplayBlog from "./DisplayBlog";
@@ -44,7 +44,7 @@ const DetailBlog = () => {
 
   return (
     <div>
-      {error && showErrorMsg(error)}
+      {error && ErrorMessage(error)}
 
       {blog && <DisplayBlog blog={blog}></DisplayBlog>}
     </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { postAPI } from "../../utils/FetchData";
-import { showErrorMsg, showSuccessMsg } from "../../components/alert/Alert";
+import { ErrorMessage, SuccessMessage } from "../../components/alert/Alert";
 const Active = () => {
   const { slug } = useParams();
   const [errMsg, setErrMsg] = useState("");
@@ -25,7 +25,7 @@ const Active = () => {
   return (
     <>
       <div>
-        {successMsg ? showSuccessMsg(successMsg) : showErrorMsg(errMsg)}
+        {successMsg ? SuccessMessage(successMsg) : ErrorMessage(errMsg)}
       </div>
     </>
   );

@@ -1,56 +1,62 @@
 import { IUserLogin, IUserRegister } from "../../TypeScript";
 import { getAPI, postAPI } from "../../utils/FetchData";
 import { AUTH, IAuthType } from "../types/authType";
-import { ALERT, IAlertType, NEW_TOAST } from "../types/alertType";
+
 import { ValidRegister } from "../../utils/Valid";
 import { Dispatch } from "redux";
-import { checkTokenExp, showError } from "../../utils/TokenUtils";
+import { checkTokenExp } from "../../utils/TokenUtils";
+import {
+  showClientError,
+  showError,
+  showLoading,
+  showSuccess,
+} from "../../utils/Utils";
 
-export const login =
-  (userLogin: any) => async (dispatch: Dispatch) => {
-    try {
-      dispatch({ type: ALERT, payload: { loading: true } });
-      const res = await postAPI("login", userLogin);
+export const login = (userLogin: any) => async (dispatch: Dispatch) => {
+  try {
+    showLoading(dispatch);
+    const res = await postAPI("login", userLogin);
 
-      dispatch({
-        type: "AUTH",
-        payload: {
-          access_token: res.data.access_token,
-          user: res.data.user,
-        },
-      });
+    dispatch({
+      type: "AUTH",
+      payload: {
+        access_token: res.data.access_token,
+        user: res.data.user,
+      },
+    });
 
-      dispatch({
-        type: NEW_TOAST,
-        payload: { message: res.data.msg, type: "success" },
-      });
+    console.log(".............", res.data.msg);
 
-      localStorage.setItem("loggedTk", res.data.loggedTk);
-    } catch (err: any) {
-      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
-    }
-  };
+    showSuccess(res.data.msg, dispatch);
+
+    localStorage.setItem("loggedTk", res.data.loggedTk);
+  } catch (err: any) {
+    showError(err.response.data.msg, dispatch);
+  }
+};
 export const register =
-  (userRegister: any) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+  (userRegister: any) => async (dispatch: Dispatch<IAuthType >) => {
     const check = ValidRegister(userRegister);
 
     if (check.errLength > 0) {
-      return dispatch({
-        type: ALERT,
-        payload: { error: check.errMsg },
-      });
+      // return dispatch({
+      //   type: NEW_TOAST,
+      //   payload: { error: check.errMsg },
+      // });
+      return showClientError(check.errMsg, dispatch);
     }
     try {
-      dispatch({ type: ALERT, payload: { loading: true } });
+
+      showLoading(dispatch)
       const res = await postAPI("register", userRegister);
 
-      dispatch({ type: ALERT, payload: { success: "Register Success!" } });
+      showSuccess("Register Success!", dispatch);
     } catch (err: any) {
-      dispatch({ type: ALERT, payload: { error: err.response.data.msg } });
+      showError(err, dispatch);
     }
   };
 export const refreshToken =
-  () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+  () => async (dispatch: Dispatch<IAuthType >) => {
     const localRfToken = localStorage.getItem("loggedTk");
     //if not logged returnI
 
@@ -69,7 +75,7 @@ export const refreshToken =
   };
 
 export const logout =
-  (token: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+  (token: string) => async (dispatch: Dispatch<IAuthType >) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
 

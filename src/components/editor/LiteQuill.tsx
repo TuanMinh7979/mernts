@@ -1,15 +1,7 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useDispatch } from "react-redux";
-import { ALERT } from "../../redux/types/alertType";
-import { checkImage, imageUpload } from "../../utils/ImageUpload";
+
 interface IProps {
   body: string;
   setBody: (value: string) => void;

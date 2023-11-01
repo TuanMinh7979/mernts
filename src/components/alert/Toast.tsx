@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import { removeToasts } from "../../utils/Utils";
 interface IProps {
   title: string;
   body: string | string[];
@@ -8,7 +9,7 @@ interface IProps {
 const Toast = ({ title, body, bgColor }: IProps) => {
   const dispatch = useDispatch();
   const hdlClose = () => {
-    dispatch({ type: "ALERT", payload: {} });
+    removeToasts(dispatch);
   };
   return (
     <div
@@ -19,7 +20,6 @@ const Toast = ({ title, body, bgColor }: IProps) => {
       style={{ top: "5px", right: "5px", zIndex: 50, minWidth: "200px" }}
     >
       <div className="toast-header">
-     
         <strong className="me-auto">{title}</strong>
         <button
           type="button"

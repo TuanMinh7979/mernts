@@ -8,11 +8,10 @@ import Quill from "../components/editor/Quill";
 import { shallowEqual } from "react-redux";
 
 import { validCreateBlog } from "../utils/Valid";
-import { ALERT } from "../redux/types/alertType";
-import { imageUpload } from "../utils/ImageUpload";
 import { createBlog } from "../redux/actions/blogAction";
 import { getAPI } from "../utils/FetchData";
 import { updateBlog } from "../redux/actions/blogAction";
+import { showClientError } from "../utils/Utils";
 interface IProps {
   id?: string;
 }
@@ -76,7 +75,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 
     const check = validCreateBlog({ ...blog, content: text });
     if (check.errLen !== 0) {
-      return dispatch({ type: ALERT, payload: { error: check.errMsg } });
+      return showClientError(check.errMsg, dispatch);
     }
 
     let newData = { ...blog, content: body };
@@ -84,11 +83,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
     if (id) {
       const checkEqual = shallowEqual(oldData, newData);
       if (checkEqual) {
-      
-        return dispatch({
-          type: ALERT,
-          payload: { error: "The data does not change" },
-        });
+        return showClientError("The data does not change", dispatch);
       } else {
         dispatch(updateBlog(newData, authState.access_token));
       }
@@ -97,7 +92,6 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
     }
   };
   if (!authState.access_token) return <NotFound />;
-
 
   return (
     <div className="my-4 create_blog">

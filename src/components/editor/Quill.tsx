@@ -8,8 +8,8 @@ import React, {
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch } from "react-redux";
-import { ALERT } from "../../redux/types/alertType";
 import { checkImage, imageUpload } from "../../utils/ImageUpload";
+import { showClientError, showLoading, stopLoading } from "../../utils/Utils";
 interface IProps {
   setBody: (value: string) => void;
   body?: string;
@@ -33,32 +33,23 @@ const Quill: React.FC<IProps> = ({ setBody, body }) => {
     input.onchange = async () => {
       const files = input.files;
       if (!files) {
-        return dispatch({
-          type: ALERT,
-          payload: { error: "File does not exist" },
-        });
+        showClientError("File does not exist", dispatch);
+        return;
       }
 
       const file = files[0];
       const check = checkImage(file);
       if (check) {
-        return dispatch({
-          type: ALERT,
-          payload: { error: check },
-        });
+        return showClientError(check, dispatch);
       }
-
-      dispatch({ type: ALERT, payload: { loading: true } });
+      showLoading(dispatch);
       const photo = await imageUpload(file);
-
       const quill = quillRef.current;
-
       const range = quill?.getEditor().getSelection()?.index;
       if (range !== undefined) {
         quill?.getEditor().insertEmbed(range, "image", `${photo.url}`);
       }
-
-      dispatch({ type: ALERT, payload: { loading: false } });
+      stopLoading(dispatch);
     };
   }, [dispatch]);
 

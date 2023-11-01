@@ -1,10 +1,11 @@
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { AUTH } from "../redux/types/authType";
-import { ALERT } from "../redux/types/alertType";
+
 import Cookies from "js-cookie";
 import { getAPI } from "./FetchData";
 import { IToken } from "../TypeScript";
+import { showInfo } from "./Utils";
 
 export const checkTokenExp = async (
   access_token: string | undefined,
@@ -21,7 +22,7 @@ export const checkTokenExp = async (
   }
 
   try {
-    dispatch({ type: ALERT, payload: { success: "Refresh new token" } });
+    showInfo("Refreshing new token", dispatch);
     const res = await getAPI("refresh_token");
     dispatch({ type: AUTH, payload: res.data });
     if (res.data && res.data.access_token) return res.data.access_token;
@@ -36,16 +37,7 @@ export const checkTokenExp = async (
 
 export const clientLogout = (dispatch: any) => {
   dispatch({ type: AUTH, payload: {} });
-
   localStorage.removeItem("loggedTk");
-};
-
-export const showError = (error: any, dispatch: any) => {
-  if (error.name == "RefreshTokenError") {
-    dispatch({ type: ALERT, payload: { error: error.message } });
-    return clientLogout(dispatch);
-  }
-  dispatch({ type: ALERT, payload: { error: error.response.data.msg } });
 };
 
 export const getTimeToExpiration = (exp: number) => {

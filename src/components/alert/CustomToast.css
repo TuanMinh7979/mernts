@@ -72,7 +72,7 @@
     box-shadow: 0 0 10px gray;
     cursor: pointer;
 }
-.toast-notification-container .toast1 {
+.toast-notification-container .custom-toast {
     width: 365px;
     color: white;
     font-weight: 700;

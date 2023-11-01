@@ -14,13 +14,13 @@ const Home = () => {
 
     dispatch(getHomeBlogs());
   }, []);
-  const { homeBlogs, alertState } = useSelector((state: RootStore) => state);
-  if (alertState.loading && alertState.showSpinner) return <Spinner />;
+  const { homeBlogs, toastState } = useSelector((state: RootStore) => state);
+  if (toastState.loading && toastState.showSpinner) return <Spinner />;
 
   return (
     <div>
       <div className="home_page">
-        {!alertState.loading && homeBlogs && homeBlogs.length === 0 && (
+        {!toastState.loading && homeBlogs && homeBlogs.length === 0 && (
           <h3 className="text-center">No Blog </h3>
         )}
         {homeBlogs &&
