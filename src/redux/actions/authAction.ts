@@ -25,17 +25,15 @@ export const login = (userLogin: any) => async (dispatch: Dispatch) => {
       },
     });
 
-    console.log(".............", res.data.msg);
+    localStorage.setItem("logged", "true");
 
     showSuccess(res.data.msg, dispatch);
-
-    localStorage.setItem("loggedTk", res.data.loggedTk);
   } catch (err: any) {
     showError(err.response.data.msg, dispatch);
   }
 };
 export const register =
-  (userRegister: any) => async (dispatch: Dispatch<IAuthType >) => {
+  (userRegister: any) => async (dispatch: Dispatch<IAuthType>) => {
     const check = ValidRegister(userRegister);
 
     if (check.errLength > 0) {
@@ -46,8 +44,7 @@ export const register =
       return showClientError(check.errMsg, dispatch);
     }
     try {
-
-      showLoading(dispatch)
+      showLoading(dispatch);
       const res = await postAPI("register", userRegister);
 
       showSuccess("Register Success!", dispatch);
@@ -55,33 +52,32 @@ export const register =
       showError(err, dispatch);
     }
   };
-export const refreshToken =
-  () => async (dispatch: Dispatch<IAuthType >) => {
-    const localRfToken = localStorage.getItem("loggedTk");
-    //if not logged returnI
+export const refreshToken = () => async (dispatch: Dispatch<IAuthType>) => {
+  const logged = localStorage.getItem("logged");
+  //if not logged returnI
 
-    if (!localRfToken) {
-      //if logged thi khong refresh token
-      return;
-    }
-    //if login get new token
+  if (!logged) {
+    //if logged thi khong refresh token
+    return;
+  }
+  //if login get new token
 
-    try {
-      const res = await getAPI("refresh_token");
-      dispatch({ type: AUTH, payload: res.data });
-    } catch (err: any) {
-      showError(err, dispatch);
-    }
-  };
+  try {
+    const res = await getAPI("refresh_token");
+    dispatch({ type: AUTH, payload: res.data });
+  } catch (err: any) {
+    showError(err, dispatch);
+  }
+};
 
 export const logout =
-  (token: string) => async (dispatch: Dispatch<IAuthType >) => {
+  (token: string) => async (dispatch: Dispatch<IAuthType>) => {
     try {
       const access_token = await checkTokenExp(token, dispatch);
 
-      localStorage.removeItem("loggedTk");
       dispatch({ type: AUTH, payload: {} });
       await getAPI("logout", access_token);
+      localStorage.removeItem("logged")
     } catch (err: any) {
       showError(err, dispatch);
     }

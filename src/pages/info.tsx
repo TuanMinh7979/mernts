@@ -9,7 +9,6 @@ import { getRefreshTokenExp } from "../utils/TokenUtils";
 const LoginInfo = () => {
   const { authState } = useSelector((state: RootStore) => state);
   // const rftk = Cookies.get("refreshtoken");
-  const loggedTk = localStorage.getItem("loggedTk");
 
   return (
     <>
@@ -21,10 +20,10 @@ const LoginInfo = () => {
       ) : (
         <p style={{ textAlign: "center" }}>Not exist Access Token </p>
       )}
-      {loggedTk ? (
+      {authState?.user?.rfTokenExp ? (
         <CountDown
           title={"Refresh token time expire in"}
-          exp={getRefreshTokenExp(loggedTk)}
+          exp={getRefreshTokenExp(authState?.user?.rfTokenExp)}
         ></CountDown>
       ) : (
         <p style={{ textAlign: "center" }}>Not exist Refresh Token </p>

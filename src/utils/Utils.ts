@@ -9,18 +9,26 @@ import {
 import { clientLogout } from "./TokenUtils";
 
 export const showError = (errorObject: any, dispatch: any) => {
+  console.log(">>>>>>>>>>>>>>>>>>>>>", errorObject);
+  console.log(">>>>>>>>>>>>>>>>>>>>>", Object.keys(errorObject));
   if (errorObject.name == "RefreshTokenError") {
+
     dispatch({
       type: NEW_TOAST,
-      payload: { messsage: errorObject.message, type: "error" },
+      payload: { message: errorObject.message, type: "error" },
     });
     return clientLogout(dispatch);
   } else if (errorObject.response) {
+
+    console.log(errorObject.response);
+
     dispatch({
       type: NEW_TOAST,
       payload: { message: errorObject.response.data.msg, type: "error" },
     });
   } else {
+  
+
     dispatch({
       type: NEW_TOAST,
       payload: { message: errorObject, type: "error" },

@@ -29,10 +29,10 @@ function App() {
         dispatch({ type: GET_CATES, payload: res.data.categories });
         const res1 = await getAPI("home/blogs");
         dispatch({ type: GET_HOME_BLOGS, payload: res1.data });
-        const localRfToken = localStorage.getItem("loggedTk");
-        //if not logged returnI
+        const logged = localStorage.getItem("logged");
+        //if not logged return
 
-        if (localRfToken) {
+        if (logged) {
           const res2 = await getAPI("refresh_token");
           dispatch({ type: AUTH, payload: res2.data });
         }

@@ -36,6 +36,8 @@ const ToastReducer = (state: IToastState = initState, action: any) => {
   switch (action.type) {
     case NEW_TOAST:
       const { message, type } = action.payload;
+      console.log(">>>>>>>>>>>>>>", action.payload);
+
       const toastIconObject = toastIcons.find(
         (item) => item.type == type
       ) as unknown as ToastIcon;

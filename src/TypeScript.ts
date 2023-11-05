@@ -25,6 +25,7 @@ export interface IUser extends IUserLogin {
   type: string;
   updatedAt: string;
   _id: string;
+  rfTokenExp?: string
 }
 
 export interface IUserRegister extends IUserLogin {

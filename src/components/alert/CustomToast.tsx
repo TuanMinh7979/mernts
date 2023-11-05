@@ -38,6 +38,9 @@ const CustomToast = (props: any) => {
     }
   }, [toastList, autoDelete, autoDeleteTime, list, deleteToast]);
 
+
+  console.log(list);
+  
   return (
     <div className={`toast-notification-container ${position}`}>
       {list.map((toast: any) => (
@@ -66,7 +69,7 @@ const CustomToast = (props: any) => {
               toast.description
             ) : (
               <ul>
-                {toast.description.map((text: string, index: number) => (
+                {toast?.description?.map((text: string, index: number) => (
                   <li style={{ listStyleType: "none" }} key={index}>
                     {text}
                   </li>

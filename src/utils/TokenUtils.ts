@@ -2,7 +2,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { AUTH } from "../redux/types/authType";
 
-import Cookies from "js-cookie";
+
 import { getAPI } from "./FetchData";
 import { IToken } from "../TypeScript";
 import { showInfo } from "./Utils";
@@ -37,7 +37,7 @@ export const checkTokenExp = async (
 
 export const clientLogout = (dispatch: any) => {
   dispatch({ type: AUTH, payload: {} });
-  localStorage.removeItem("loggedTk");
+  localStorage.removeItem("logged");
 };
 
 export const getTimeToExpiration = (exp: number) => {
@@ -54,10 +54,9 @@ export const getAccessTokenExp = (access_token: string) => {
   }
   return accessTokenDecode.exp;
 };
-export const getRefreshTokenExp = (rfToken: string) => {
-  const rfTokenDecode: IToken = jwt_decode(rfToken as string);
-  if (rfTokenDecode.exp <= Date.now() / 1000) {
+export const getRefreshTokenExp = (exp: any) => {
+  if (exp <= Date.now() / 1000) {
     return "expired";
   }
-  return rfTokenDecode.exp;
+  return exp;
 };
