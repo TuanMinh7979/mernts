@@ -66,13 +66,15 @@ const authCtrl = {
       const access_token = generateAccessToken({
         id: user._id,
       });
-      const rftoken = generateRefreshToken({ id: user._id }, res);
-
+      const newRfTk = generateRefreshToken({ id: user._id }, res);
+      let decoded = <IDecodedToken>(
+        jwt.verify(newRfTk, `${process.env.REFRESH_SECRET}`)
+      );
       res.json({
         msg: "Login Success!",
         access_token,
-        loggedTk: rftoken,
-        user: { ...user._doc, password: "" },
+
+        user: { ...user._doc, password: "", rfTokenExp: decoded.exp },
       });
     } catch (err: any) {
       if (err instanceof Error)
@@ -84,7 +86,7 @@ const authCtrl = {
     if (!req.user)
       return res.status(400).json({ msg: "Invalid authentication" });
     try {
-      res.clearCookie("refreshtoken", { path: `/api/refresh_token` });
+      res.clearCookie("refreshtoken");
       return res.json({ msg: " logged out" });
     } catch (err: any) {
       if (err instanceof Error)
@@ -117,9 +119,13 @@ const authCtrl = {
 
       const access_token = generateAccessToken({ id: user._id });
 
-      res.json({ access_token, user });
+      res.json({
+        access_token,
+        user: { ...user._doc, rfTokenExp: decoded.exp },
+      });
     } catch (err: any) {
       return res
+        .clearCookie("refreshtoken")
         .status(500)
         .json({ msg: "refreshToken Controller " + err.message });
     }
