@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
 
     avatar: {
       type: String,
-      default: "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000",
+      default: "https://res.cloudinary.com/djnekmzdf/image/upload/v1700223914/sglvprbhnu5ncoy9p6vb.png",
     },
     type: {
       type: String,
